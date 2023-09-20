@@ -79,7 +79,6 @@ The first parameter represents a bill and the second represents a tax rate (a nu
 and 1.0 inclusive). The function should return the total amount to be paid on the given bill.
 """
 
-def 
 
 def calculate_total(bill: float, tax_rate: float) -> float:
     """
