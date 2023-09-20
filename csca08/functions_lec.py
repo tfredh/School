@@ -30,17 +30,17 @@ def percentage(num: int, out_of: int) -> int:
     return round(num / out_of * 100)
 
 
-def max_of_min(num1: float, num2: float, val1: float, val2: float) -> float:
-    """Return the maximum of the minimums of the pairs num1 and num2,
-    and val1 and val2.
+# def max_of_min(num1: float, num2: float, val1: float, val2: float) -> float:
+#     """Return the maximum of the minimums of the pairs num1 and num2,
+#     and val1 and val2.
 
-    >>> max_of_min(4.0, 3.7)
-    ???
-    >>> ???
-    ???
-    """
+#     >>> max_of_min(4.0, 3.7)
+#     ???
+#     >>> ???
+#     ???
+#     """
 
-    return max(min(num1, num2), min(val1, val2))
+#     return max(min(num1, num2), min(val1, val2))
 
 
 """Code for week 2 worksheets: starter code.
@@ -78,6 +78,24 @@ Description (need to change for the docstring!)
 The first parameter represents a bill and the second represents a tax rate (a number between 0.0
 and 1.0 inclusive). The function should return the total amount to be paid on the given bill.
 """
+
+
+def calculate_total(bill: float, tax_rate: float) -> float:
+    """
+    Return the total cost of the transaction accrued from the bill, `bill`,
+    including a `tax_rate` tax rate on the bill, rounded to two decimal 
+    places.
+    Constraints:
+    - bill >= 0
+    - tax_rate >= 0
+
+    >>> calculate_total(50.0, 0.10)
+    55.0
+    >>> calculate_total(206, 0.13)
+    232.78
+    """
+
+    return round(bill * (1 + tax_rate), 2)
 
 
 if __name__ == '__main__':
