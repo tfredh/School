@@ -30,17 +30,17 @@ def percentage(num: int, out_of: int) -> int:
     return round(num / out_of * 100)
 
 
-def max_of_min(num1: float, num2: float, val1: float, val2: float) -> float:
-    """Return the maximum of the minimums of the pairs num1 and num2,
-    and val1 and val2.
+# def max_of_min(num1: float, num2: float, val1: float, val2: float) -> float:
+#     """Return the maximum of the minimums of the pairs num1 and num2,
+#     and val1 and val2.
 
-    >>> max_of_min(4.0, 3.7)
-    ???
-    >>> ???
-    ???
-    """
+#     >>> max_of_min(4.0, 3.7)
+#     ???
+#     >>> ???
+#     ???
+#     """
 
-    return max(min(num1, num2), min(val1, val2))
+#     return max(min(num1, num2), min(val1, val2))
 
 
 """Code for week 2 worksheets: starter code.
@@ -79,6 +79,7 @@ The first parameter represents a bill and the second represents a tax rate (a nu
 and 1.0 inclusive). The function should return the total amount to be paid on the given bill.
 """
 
+def 
 
 if __name__ == '__main__':
     import doctest
