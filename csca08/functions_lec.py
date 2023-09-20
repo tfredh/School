@@ -81,6 +81,24 @@ and 1.0 inclusive). The function should return the total amount to be paid on th
 
 def 
 
+def calculate_total(bill: float, tax_rate: float) -> float:
+    """
+    Return the total cost of the transaction accrued from the bill, `bill`,
+    including a `tax_rate` tax rate on the bill, rounded to two decimal 
+    places.
+    Constraints:
+    - bill >= 0
+    - tax_rate >= 0
+
+    >>> calculate_total(50.0, 0.10)
+    55.0
+    >>> calculate_total(206, 0.13)
+    232.78
+    """
+
+    return round(bill * (1 + tax_rate), 2)
+
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
