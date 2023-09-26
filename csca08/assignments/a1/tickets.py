@@ -27,6 +27,8 @@ def get_date(ticket: str) -> str:
     '20230915'
     >>> get_date('20240915YYZYEG12F1236')
     '20240915'
+    >>> get_date('20230926DFGKER19D')
+    '20230926'
     """
 
     return get_year(ticket) + get_month(ticket) + get_day(ticket)
@@ -41,6 +43,8 @@ def get_year(ticket: str) -> str:
     '2023'
     >>> get_year('20240915YYZYEG12F1236')
     '2024'
+    >>> get_year('20230926DFGKER19D')
+    '2023'
     """
 
     return ticket[YR: YR + 4]
@@ -54,6 +58,8 @@ def get_month(ticket: str) -> str:
     '09'
     >>> get_month('20241215YYZYEG12F1236')
     '12'
+    >>> get_month('20230926DFGKER19D')
+    '09'
     """
 
     return ticket[MON: MON + 2]
@@ -63,10 +69,12 @@ def get_month(ticket: str) -> str:
 def get_day(ticket: str) -> str:
     """Return the day of ticket 'ticket'.
 
-    >>> get_day('20230926DFGKER19D')
-    '26'
+    >>> get_day('20230915YYZYEG12F')
+    '15'
     >>> get_day('20241215YYZYEG12F1236')
     '15'
+    >>> get_day('20230926DFGKER19D')
+    '26'
     """
 
     return ticket[DAY: DAY + 2]
@@ -75,10 +83,12 @@ def get_day(ticket: str) -> str:
 def get_departure(ticket: str) -> str:
     """Return the departure location of ticket 'ticket'
 
-    >>> get_departure('20230926DFGKER19D')
-    'DFG'
+    >>> get_departure('20230915YYZYEG12F')
+    'YYZ'
     >>> get_departure('20241215YYZYEG12F1236')
     'YYZ'
+    >>> get_departure('20230926DFGKER19D')
+    'DFG'
     """
 
     return ticket[DEP: DEP + 3]
@@ -86,11 +96,13 @@ def get_departure(ticket: str) -> str:
 
 def get_arrival(ticket: str) -> str:
     """Return the arrival location of ticket 'ticket'
-
-    >>> get_arrival('20230926DFGKER19D')
-    'KER'
+    
+    >>> get_arrival('20230915YYZYEG12F')
+    'YEG'
     >>> get_arrival('20241215YYZYEG12F1236')
     'YEG'
+    >>> get_arrival('20230926DFGKER19D')
+    'KER'
     """
 
     return ticket[ARR: ARR + 3]
