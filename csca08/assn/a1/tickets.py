@@ -163,20 +163,52 @@ def get_ffn(ticket: str) -> str:
     return ticket[FFN: FFN + 4]
 
 
-# # We provide the docstring for this function to help you get started.
-# def visits_airport(ticket: str, airport: str) -> bool:
-#     """Return True if and only if either departure or arrival airport on
-#     ticket 'ticket' is the same as 'airport'.
+"""
+Task 2: Validating the Information (12 correctness marks)
+"""
 
-#     >>> visits_airport('20230915YYZYEG12F1236', 'YEG')
+
+# We provide the docstring for this function to help you get started.
+# def is_valid_seat(ticket: str, first_row: int, last_row: int) -> bool:
+#     """Return True if and only if this ticket has a valid seat. That is,
+#     if the seat row is between 'first_row' and 'last_row', inclusive,
+#     and the seat is SA, SB, SC, SD, SE, or SF.
+
+#     Precondition: 'ticket' is in valid format.
+
+#     >>> is_valid_seat('20230915YYZYEG12F1236', 1, 30)
 #     True
-#     >>> visits_airport('20230915YEGYYZ12F1236', 'YEG')
-#     True
-#     >>> visits_airport('20230915YYZYEG12F1236', 'YVR')
+#     >>> is_valid_seat('20230915YYZYEG42F1236', 1, 30)
+#     False
+#     >>> is_valid_seat('20230915YYZYEG21Q1236', 1, 30)
 #     False
 #     """
 
-#     pass  # replace this line with your solution
+#     return
+
+
+"""
+Task 3: Analysing the Information (12 correctness marks)
+"""
+
+
+# We provide the docstring for this function to help you get started.
+def visits_airport(ticket: str, airport: str) -> bool:
+    """Return True if and only if either departure or arrival airport on
+    ticket 'ticket' is the same as 'airport'.
+
+    >>> visits_airport('20230915YYZYEG12F1236', 'YEG')
+    True
+    >>> visits_airport('20230915YEGYYZ12F1236', 'YEG')
+    True
+    >>> visits_airport('20230915YYZYEG12F1236', 'YVR')
+    False
+    """
+
+    return (
+        get_departure(ticket) == airport or
+        get_arrival(ticket) == airport
+    )
 
 
 # # We provide the docstring for this function to help you get started.
@@ -192,25 +224,6 @@ def get_ffn(ticket: str) -> str:
 #     'middle'
 #     >>> get_seat_type('20230915YYZYEG12C1236')
 #     'aisle'
-#     """
-
-#     pass  # replace this line with your solution
-
-
-# # We provide the docstring for this function to help you get started.
-# def is_valid_seat(ticket: str, first_row: int, last_row: int) -> bool:
-#     """Return True if and only if this ticket has a valid seat. That is,
-#     if the seat row is between 'first_row' and 'last_row', inclusive,
-#     and the seat is SA, SB, SC, SD, SE, or SF.
-
-#     Precondition: 'ticket' is in valid format.
-
-#     >>> is_valid_seat('20230915YYZYEG12F1236', 1, 30)
-#     True
-#     >>> is_valid_seat('20230915YYZYEG42F1236', 1, 30)
-#     False
-#     >>> is_valid_seat('20230915YYZYEG21Q1236', 1, 30)
-#     False
 #     """
 
 #     pass  # replace this line with your solution
@@ -258,7 +271,6 @@ def get_ffn(ticket: str) -> str:
 #     >>> is_valid_ticket_format('ABC41020YYZYEG12C1236')
 #     False
 #     """
-
 #     return (FFN == 17
 #             and (len(ticket) == 17
 #                  or len(ticket) == 21 and ticket[FFN:FFN + 4].isdigit())
@@ -269,7 +281,6 @@ def get_ffn(ticket: str) -> str:
 #             and ticket[ARR:ARR + 3].isalpha()
 #             and ticket[ROW:ROW + 2].isdigit()
 #             and ticket[SEAT].isalpha())
-
 
 if __name__ == '__main__':
     import doctest
