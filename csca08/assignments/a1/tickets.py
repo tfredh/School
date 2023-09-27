@@ -18,8 +18,6 @@ from constants import (YR, MON, DAY, DEP, ARR, ROW, SEAT, FFN,
 # We provide this function solution as an example of correct function
 # documentation, as well as a function that uses other functions as
 # helpers.
-
-
 def get_date(ticket: str) -> str:
     """Return the date of ticket 'ticket' in YYYYMMDD format.
 
@@ -81,7 +79,7 @@ def get_day(ticket: str) -> str:
 
 
 def get_departure(ticket: str) -> str:
-    """Return the departure location of ticket 'ticket'
+    """Return the departure location of ticket 'ticket'.
 
     >>> get_departure('20230915YYZYEG12F')
     'YYZ'
@@ -95,8 +93,8 @@ def get_departure(ticket: str) -> str:
 
 
 def get_arrival(ticket: str) -> str:
-    """Return the arrival location of ticket 'ticket'
-    
+    """Return the arrival location of ticket 'ticket'.
+
     >>> get_arrival('20230915YYZYEG12F')
     'YEG'
     >>> get_arrival('20241215YYZYEG12F1236')
@@ -109,15 +107,60 @@ def get_arrival(ticket: str) -> str:
 
 
 def get_row(ticket: str) -> str:
-    """Return the departure location of ticket 'ticket'
+    """Return the seat row of ticket 'ticket'.
 
-    >>> get_row('20230926DFGKER19D')
-    'KER'
+    >>> get_row('20230915YYZYEG12F')
+    '12'
     >>> get_row('20241215YYZYEG12F1236')
-    'YEG'
+    '12'
+    >>> get_row('20230926DFGKER19D')
+    '19'
     """
 
-    return ticket[ARR: ARR + 3]
+    return ticket[ROW: ROW + 2]
+
+
+def get_seat(ticket: str) -> str:
+    """Return the seat type of ticket 'ticket'.
+
+    >>> get_seat('20230915YYZYEG12F')
+    'F'
+    >>> get_seat('20241215YYZYEG12F1236')
+    'F'
+    >>> get_seat('20230926DFGKER19D')
+    'D'
+    """
+
+    return ticket[SEAT: SEAT + 1]
+
+
+def get_seat(ticket: str) -> str:
+    """Return the seat type of ticket 'ticket'.
+
+    >>> get_seat('20230915YYZYEG12F')
+    'F'
+    >>> get_seat('20241215YYZYEG12F1236')
+    'F'
+    >>> get_seat('20230926DFGKER19D')
+    'D'
+    """
+
+    return ticket[SEAT: SEAT + 1]
+
+
+def get_ffn(ticket: str) -> str:
+    """Return the frequent flyer number (FFN) of ticket 'ticket'.
+    If there is no FFN, an empty string '""' is returned.
+
+    >>> get_ffn('20230915YYZYEG12F')
+    ''
+    >>> get_ffn('20241215YYZYEG12F1236')
+    '1236'
+    >>> get_ffn('20230926DFGKER19D')
+    ''
+    """
+
+    return ticket[FFN: FFN + 4]
 
 
 # # We provide the docstring for this function to help you get started.
