@@ -14,10 +14,11 @@ Copyright (c) 2020-2023 Jacqueline Smith and Anya Tafliovich.
 from constants import (YR, MON, DAY, DEP, ARR, ROW, SEAT, FFN,
                        WINDOW, AISLE, MIDDLE, SA, SB, SC, SD, SE, SF)
 
-
 # We provide this function solution as an example of correct function
 # documentation, as well as a function that uses other functions as
 # helpers.
+
+
 def get_date(ticket: str) -> str:
     """Return the date of ticket 'ticket' in YYYYMMDD format.
 
@@ -106,18 +107,18 @@ def get_arrival(ticket: str) -> str:
     return ticket[ARR: ARR + 3]
 
 
-def get_row(ticket: str) -> str:
+def get_row(ticket: str) -> int:
     """Return the seat row of ticket 'ticket'.
 
     >>> get_row('20230915YYZYEG12F')
-    '12'
+    12
     >>> get_row('20241215YYZYEG12F1236')
-    '12'
+    12
     >>> get_row('20230926DFGKER19D')
-    '19'
+    19
     """
 
-    return ticket[ROW: ROW + 2]
+    return int(ticket[ROW: ROW + 2])
 
 
 def get_seat(ticket: str) -> str:
@@ -154,7 +155,13 @@ Task 2: Validating the Information (12 correctness marks)
 """
 
 
+# def f(x):
+#     return (x
+#             + 3)
+
 # We provide the docstring for this function to help you get started.
+
+
 def is_valid_seat(ticket: str, first_row: int, last_row: int) -> bool:
     """Return True if and only if this ticket has a valid seat. That is,
     if the seat row is between 'first_row' and 'last_row', inclusive,
@@ -169,10 +176,8 @@ def is_valid_seat(ticket: str, first_row: int, last_row: int) -> bool:
     False
     """
 
-    return (
-        first_row <= int(get_row(ticket)) <= last_row and
-        get_seat(ticket) in (SA, SB, SC, SD, SE, SF)
-    )
+    return (first_row <= get_row(ticket) <= last_row
+            and get_seat(ticket) in (SA, SB, SC, SD, SE, SF))
 
 
 def is_valid_ffn(ticket: str) -> bool:
@@ -194,10 +199,10 @@ def is_valid_ffn(ticket: str) -> bool:
 
     ffn = get_ffn(ticket)
     return (
-        ffn == "" or
-        ffn.isdigit() and
-        len(ffn) == 4 and
-        sum([int(num) for num in ffn[:3]]) % 10 == int(ffn[3])
+        ffn == ""
+        or ffn.isdigit()
+        and len(ffn) == 4
+        and sum([int(num) for num in ffn[:3]]) % 10 == int(ffn[3])
     )
 
 
@@ -238,6 +243,8 @@ def is_valid_date(ticket: str) -> bool:
     False
     >>> is_valid_date('20000231YYZYEG42F')
     False
+    >>> is_valid_date('20000299YYZYEG42F') # date too high
+    False
     >>> is_valid_date('20000229YYZYEG42F') # N00 leap year 29th
     True
     >>> is_valid_date('21040229YYZYEG42F') # regular leap year 29th
@@ -254,10 +261,11 @@ def is_valid_date(ticket: str) -> bool:
 
     leap_year: bool = is_leap_year(year)
     return (
-        1 <= month <= 12 and (
-            month in MONTHS_WITH_31 and 1 <= day <= 31 or
-            month == 2 and 1 <= day <= (28 + int(leap_year)) or
-            month != 2 and 1 <= day <= 30
+        1 <= month <= 12
+        and (
+            month in MONTHS_WITH_31 and 1 <= day <= 31
+            or month == 2 and 1 <= day <= (28 + int(leap_year))
+            or month != 2 and 1 <= day <= 30
         )
     )
 
@@ -270,15 +278,23 @@ def is_valid_ticket(ticket: str, first_row: int, last_row: int) -> bool:
     The function should return True if and only if the ticket is in valid 
     format and all of the ticket information on this ticket is valid.
 
-    >>>
-
+    >>> is_valid_ticket('20230915YYZYEG12F1236', 1, 20)
+    True
+    >>> is_valid_ticket('20230229YYZYEG12F1236', 1, 20)
+    False
+    >>> is_valid_ticket('20290931YYZYEG42F', 5, 30)
+    False
+    >>> is_valid_ticket('20000216YYZYEG42F', 9, 50)
+    True
+    >>> is_valid_ticket('20000216YYZYEG42Q', 9, 50)
+    False
     """
 
     return (
-        is_valid_ticket_format(ticket) and
-        is_valid_date(ticket) and
-        is_valid_seat(first_row, last_row) and
-        is_valid_ffn(ticket)
+        is_valid_ticket_format(ticket)
+        and is_valid_date(ticket)
+        and is_valid_seat(ticket, first_row, last_row)
+        and is_valid_ffn(ticket)
     )
 
 
@@ -303,6 +319,7 @@ def is_valid_ticket_format(ticket: str) -> bool:
     >>> is_valid_ticket_format('ABC41020YYZYEG12C1236')
     False
     """
+
     return (FFN == 17
             and (len(ticket) == 17
                  or len(ticket) == 21 and ticket[FFN:FFN + 4].isdigit())
@@ -334,48 +351,137 @@ def visits_airport(ticket: str, airport: str) -> bool:
     """
 
     return (
-        get_departure(ticket) == airport or
-        get_arrival(ticket) == airport
+        get_departure(ticket) == airport
+        or get_arrival(ticket) == airport
     )
 
 
-# # We provide the docstring for this function to help you get started.
-# def get_seat_type(ticket: str) -> str:
-#     """Return WINDOW, AISLE, or MIDDLE depending on the type of seat in
-#     ticket 'ticket'.
+def connecting(ticket1: str, ticket2: str) -> bool:
+    """
+    The function should return True if and only if the two flights on
+    'ticket1' and 'ticket2' respectively, are connecting: the first 
+    flight arrives in the same airport as the departure point of the 
+    second flight, and the two flights are on the same dates. 
+    Constraints: 
+    - The tickets are valid
 
-#     Precondition: 'ticket' is a valid ticket.
+    >>> connecting('20230915YYZYEG12F1236', '20230915YEGYYZ12F1236')
+    True
+    >>> connecting('20230915YYZYEG12F1236', '20230915YYZYEG12F1236')
+    False
+    >>> connecting('20230915AAABBB12F1236', '20230915BBBAAA12F1236')
+    True
+    >>> connecting('20230915BBBAAA12F1236', '20230915AAABBB12F1236')
+    True
+    >>> connecting('20230915AAABBB12F1236', '20230916BBBAAA12F1236')
+    False
+    """
 
-#     >>> get_seat_type('20230915YYZYEG12F1236')
-#     'window'
-#     >>> get_seat_type('20230915YYZYEG08B')
-#     'middle'
-#     >>> get_seat_type('20230915YYZYEG12C1236')
-#     'aisle'
+    return (
+        get_date(ticket1) == get_date(ticket2) and (
+            get_arrival(ticket1) == get_departure(ticket2) or
+            get_arrival(ticket2) == get_departure(ticket1)
+        )
+    )
+
+
+# We provide the docstring for this function to help you get started.
+def adjacent(ticket1: str, ticket2: str) -> bool:
+    """Return True if any only if the seats in tickets 'ticket1' and
+    'ticket2' are adjacent (next to each other). Seats across an aisle
+    are not considered to be adjacent.
+    Precondition: ticket1 and ticket2 are valid tickets.
+
+    >>> adjacent('20230915YYZYEG12D1236', '20230915YYZYEG12E1236')
+    True
+    >>> adjacent('20230915YYZYEG12B1236', '20230915YYZYEG12A1236')
+    True
+    >>> adjacent('20230915YYZYEG12C1236', '20230915YYZYEG12D1236')
+    False
+    >>> adjacent('20230915YYZYEG12A1236', '20230915YYZYEG11B1236')
+    False
+    """
+
+    seat1, seat2 = get_seat(ticket1), get_seat(ticket2)
+    return (
+        get_row(ticket1) == get_row(ticket2) and
+        abs(ord(seat1) - ord(seat2)) == 1 and
+        not (seat1 == 'C' and seat2 == 'D' or seat1 == 'D' and seat2 == 'C')
+    )
+
+
+def behind(ticket1: str, ticket2: str) -> bool:
+    """
+    The function should return True if and only if the seats on the 
+    two tickets are one immediately behind another.
+    Precondition: ticket1 and ticket2 are valid tickets.
+
+    >>> behind('20230915YYZYEG12D1236', '20230915YYZYEG12E1236')
+    False
+    >>> behind('20230915YYZYEG12B1236', '20230915YYZYEG12A1236')
+    False
+    >>> behind('20230915YYZYEG12C1236', '20230915YYZYEG12D1236')
+    False
+    >>> behind('20230915YYZYEG12A1236', '20230915YYZYEG11B1236')
+    False
+    >>> behind('20230915YYZYEG12A1236', '20230915YYZYEG11A1236')
+    True
+    >>> behind('20230915YYZYEG11A1236', '20230915YYZYEG12A1236')
+    True
+    >>> behind('20230915YYZYEG11A1236', '20230915YYZYEG116A1236')
+    False
+    """
+
+    row1, row2 = get_row(ticket1), get_row(ticket2)
+    seat1, seat2 = get_seat(ticket1), get_seat(ticket2)
+    return abs(row1 - row2) == 1 and seat1 == seat2
+
+
+# We provide the docstring for this function to help you get started.
+def get_seat_type(ticket: str) -> str:
+    """Return WINDOW, AISLE, or MIDDLE depending on the type of seat in
+    ticket 'ticket'.
+    Precondition: 'ticket' is a valid ticket.
+
+    >>> get_seat_type('20230915YYZYEG12F1236')
+    'window'
+    >>> get_seat_type('20230915YYZYEG08B')
+    'middle'
+    >>> get_seat_type('20230915YYZYEG12C1236')
+    'aisle'
+    """
+
+    seat = get_seat(ticket)
+    if seat == SA or seat == SF:
+        return WINDOW
+    if seat == SB or seat == SE:
+        return MIDDLE
+    return AISLE
+
+
+"""
+Task 4: Changing the Information (BONUS 4 correctness marks)
+"""
+
+
+# def change_seat(ticket: str, row_num: int, row_seat: str) -> str:
+#     """
+#     Returns a new ticket that is in the same format as the input ticket,
+#     has the same departure, arrival, date, and frequent flyer number as
+#     the input ticket, and has a new seat information with the given row
+#     and seat.
 #     """
 
-#     pass  # replace this line with your solution
+#     return (
+#         get_date(ticket)
+#         + get_departure(ticket)
+#         + get_arrival(ticket)
+#         + ...
+#     )
 
 
-# # We provide the docstring for this function to help you get started.
-# def adjacent(ticket1: str, ticket2: str) -> bool:
-#     """Return True if any only if the seats in tickets 'ticket1' and
-#     'ticket2' are adjacent (next to each other). Seats across an aisle
-#     are not considered to be adjacent.
-
-#     Precondition: ticket1 and ticket2 are valid tickets.
-
-#     >>> adjacent('20230915YYZYEG12D1236', '20230915YYZYEG12E1236')
-#     True
-#     >>> adjacent('20230915YYZYEG12B1236', '20230915YYZYEG12A1236')
-#     True
-#     >>> adjacent('20230915YYZYEG12C1236', '20230915YYZYEG12D1236')
-#     False
-#     >>> adjacent('20230915YYZYEG12A1236', '20230915YYZYEG11B1236')
-#     False
-#     """
-
-#     pass  # replace this line with your solution
+# def change_date():
+#     pass
 
 
 if __name__ == '__main__':
