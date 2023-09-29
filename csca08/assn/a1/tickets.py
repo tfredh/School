@@ -150,18 +150,10 @@ def get_ffn(ticket: str) -> str:
     return ticket[FFN: FFN + 4]
 
 
-"""
-Task 2: Validating the Information (12 correctness marks)
-"""
-
-
-# def f(x):
-#     return (x
-#             + 3)
-
+# """
+# Task 2: Validating the Information (12 correctness marks)
+# """
 # We provide the docstring for this function to help you get started.
-
-
 def is_valid_seat(ticket: str, first_row: int, last_row: int) -> bool:
     """Return True if and only if this ticket has a valid seat. That is,
     if the seat row is between 'first_row' and 'last_row', inclusive,
@@ -202,12 +194,8 @@ def is_valid_ffn(ticket: str) -> bool:
         ffn == ""
         or ffn.isdigit()
         and len(ffn) == 4
-        and sum([int(num) for num in ffn[:3]]) % 10 == int(ffn[3])
+        and sum(int(num) for num in ffn[:3]) % 10 == int(ffn[3])
     )
-
-
-# months with 31 days
-MONTHS_WITH_31 = {1, 3, 5, 7, 8, 10, 12}
 
 
 def is_leap_year(yr: int) -> bool:
@@ -263,8 +251,11 @@ def is_valid_date(ticket: str) -> bool:
     return (
         1 <= month <= 12
         and (
-            month in MONTHS_WITH_31 and 1 <= day <= 31
+            # months with 31 days
+            month in {1, 3, 5, 7, 8, 10, 12} and 1 <= day <= 31
+            # february and leap years
             or month == 2 and 1 <= day <= (28 + int(leap_year))
+            # other
             or month != 2 and 1 <= day <= 30
         )
     )
@@ -332,11 +323,9 @@ def is_valid_ticket_format(ticket: str) -> bool:
             and ticket[SEAT].isalpha())
 
 
-"""
-Task 3: Analysing the Information (12 correctness marks)
-"""
-
-
+# """
+# Task 3: Analysing the Information (12 correctness marks)
+# """
 # We provide the docstring for this function to help you get started.
 def visits_airport(ticket: str, airport: str) -> bool:
     """Return True if and only if either departure or arrival airport on
@@ -378,9 +367,10 @@ def connecting(ticket1: str, ticket2: str) -> bool:
     """
 
     return (
-        get_date(ticket1) == get_date(ticket2) and (
-            get_arrival(ticket1) == get_departure(ticket2) or
-            get_arrival(ticket2) == get_departure(ticket1)
+        get_date(ticket1) == get_date(ticket2)
+        and (
+            get_arrival(ticket1) == get_departure(ticket2)
+            or get_arrival(ticket2) == get_departure(ticket1)
         )
     )
 
@@ -404,9 +394,9 @@ def adjacent(ticket1: str, ticket2: str) -> bool:
 
     seat1, seat2 = get_seat(ticket1), get_seat(ticket2)
     return (
-        get_row(ticket1) == get_row(ticket2) and
-        abs(ord(seat1) - ord(seat2)) == 1 and
-        not (seat1 == 'C' and seat2 == 'D' or seat1 == 'D' and seat2 == 'C')
+        get_row(ticket1) == get_row(ticket2)
+        and abs(ord(seat1) - ord(seat2)) == 1
+        and not (seat1 == 'C' and seat2 == 'D' or seat1 == 'D' and seat2 == 'C')
     )
 
 
@@ -459,29 +449,61 @@ def get_seat_type(ticket: str) -> str:
     return AISLE
 
 
-"""
-Task 4: Changing the Information (BONUS 4 correctness marks)
-"""
+# """
+# Task 4: Changing the Information (BONUS 4 correctness marks)
+# """
+def change_seat(ticket: str, row_num: int, row_seat: str) -> str:
+    """
+    Returns a new ticket that is in the same format as the input ticket,
+    has the same departure, arrival, date, and frequent flyer number as
+    the input ticket, and has a new seat information with the given row
+    and seat.
+    Constraints:
+    - 'ticket' is a valid ticket.
+    - especially, new seat type should be valid ('A' - 'F')
+
+    >>> change_seat('20230915YYZYEG12F1236', 44, 'C')
+    '20230915YYZYEG44C1236'
+    >>> change_seat('20230915YYZYEG08B', 45, 'D')
+    '20230915YYZYEG45D'
+    >>> change_seat('20230915YYZYEG12C1236', 28, 'F')
+    '20230915YYZYEG28F1236'
+    """
+
+    return (
+        get_date(ticket)
+        + get_departure(ticket)
+        + get_arrival(ticket)
+        + str(row_num)
+        + row_seat
+        + get_ffn(ticket)
+    )
 
 
-# def change_seat(ticket: str, row_num: int, row_seat: str) -> str:
-#     """
-#     Returns a new ticket that is in the same format as the input ticket,
-#     has the same departure, arrival, date, and frequent flyer number as
-#     the input ticket, and has a new seat information with the given row
-#     and seat.
-#     """
+def change_date(ticket: str, day: str, month: str, year: str) -> str:
+    """
+    Returns a new ticket that is in the same format as the input ticket, 
+    has the same departure, arrival, seat information, and frequent flyer 
+    number as the input ticket, and has a new date with year `year`, month
+    `month`, and day `day`. Just like a regular ticket, the new ticket date
+    is in YYYYMMDD format.
+    Constraints:
+    - 'ticket' is a valid ticket.
 
-#     return (
-#         get_date(ticket)
-#         + get_departure(ticket)
-#         + get_arrival(ticket)
-#         + ...
-#     )
+    >>> change_date('20230915YYZYEG12F1236', '09', '04', '2029')
+    '20290409YYZYEG12F1236'
+    >>> change_date('20230915YYZYEG08B', '14', '11', '1000')
+    '10001114YYZYEG08B'
+    >>> change_date('20230915YYZYEG12C1236', '30', '09', '2001')
+    '20010930YYZYEG12C1236'
+    """
 
-
-# def change_date():
-#     pass
+    return (
+        year
+        + month
+        + day
+        + ticket[DEP:]
+    )
 
 
 if __name__ == '__main__':
