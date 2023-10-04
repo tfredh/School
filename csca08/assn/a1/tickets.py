@@ -187,6 +187,8 @@ def is_valid_ffn(ticket: str) -> bool:
     False
     >>> is_valid_ffn('20230915YYZYEG42F')
     True
+    >>> is_valid_ffn('20230915YYZYEG42F999')
+    False
     """
 
     ffn = get_ffn(ticket)
@@ -395,8 +397,16 @@ def adjacent(ticket1: str, ticket2: str) -> bool:
     seat1, seat2 = get_seat(ticket1), get_seat(ticket2)
     return (
         get_row(ticket1) == get_row(ticket2)
-        and abs(ord(seat1) - ord(seat2)) == 1
-        and not (seat1 == 'C' and seat2 == 'D' or seat1 == 'D' and seat2 == 'C')
+        and (
+            (seat1 == SA and seat2 == SB)
+            or (seat1 == SB and seat2 == SA)
+            or (seat1 == SB and seat2 == SC)
+            or (seat1 == SC and seat2 == SB)
+            or (seat1 == SD and seat2 == SE)
+            or (seat1 == SE and seat2 == SD)
+            or (seat1 == SE and seat2 == SF)
+            or (seat1 == SF and seat2 == SE)
+        )
     )
 
 
@@ -493,7 +503,7 @@ def change_date(ticket: str, day: str, month: str, year: str) -> str:
     >>> change_date('20230915YYZYEG12F1236', '09', '04', '2029')
     '20290409YYZYEG12F1236'
     >>> change_date('20230915YYZYEG08B', '14', '11', '1000')
-    '10001114YYZYEG08B'
+    '10001114YYZYEG8B'
     >>> change_date('20230915YYZYEG12C1236', '30', '09', '2001')
     '20010930YYZYEG12C1236'
     """
@@ -502,7 +512,11 @@ def change_date(ticket: str, day: str, month: str, year: str) -> str:
         year
         + month
         + day
-        + ticket[DEP:]
+        + get_departure(ticket)
+        + get_arrival(ticket)
+        + str(get_row(ticket))
+        + get_seat(ticket)
+        + get_ffn(ticket)
     )
 
 
