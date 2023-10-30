@@ -47,6 +47,8 @@ def read_data(csv_file: TextIO) -> list[list[str]]:
     return list(lines)[2:]
 
 
+# print(read_data('/bridge_data.csv'))
+
 # We provide this function for you to use as a helper.  This function
 # uses the haversine function to find the distance between two
 # locations. You do not need to understand why it works. You will just
@@ -56,6 +58,8 @@ def read_data(csv_file: TextIO) -> list[list[str]]:
 # defined above to constuct example calls for the function that
 # returns a float. We do not test with ==; instead, we check that the
 # return value is "close enough" to the expected result.
+
+
 def calculate_distance(lat1: float, lon1: float,
                        lat2: float, lon2: float) -> float:
     """Return the distance in kilometers between the two locations defined by
