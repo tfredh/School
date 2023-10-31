@@ -254,8 +254,8 @@ def get_bridges_in_radius(
     radius: float
 ) -> list[int]:
     """
-    Returns a list of ids of all bridges in `bridges_data` that are within the distance, 
-    `radius` of the given location, (`lat`, `lon`).
+    Returns a list of ids of all bridges in `bridges_data` that are within the
+    distance, `radius` of the given location, (`lat`, `lon`).
 
     >>> get_bridges_in_radius(THREE_BRIDGES, 43.10, -80.15, 50)
     [1, 2]
@@ -280,6 +280,71 @@ def get_bridges_in_radius(
             bridges_in_radius.append(bridge[ID_INDEX])
 
     return bridges_in_radius
+
+
+def get_bridges_with_bci_below(
+    bridge_data: list[list],
+    bridge_ids: list[int],
+    ref_bci: float
+) -> list[int]:
+    """
+    Returns a list of ids of all bridges in `bridge_data` whose ids are in the
+    list of ids, `bridge_ids` and whose BCI is less than or equal to the 
+    reference BCI, ref_bci.
+
+    >>> get_bridges_with_bci_below(THREE_BRIDGES, [1, 2], 72)
+    [2]
+    >>> get_bridges_with_bci_below(THREE_BRIDGES, [1], 72)
+    []
+    >>> get_bridges_with_bci_below(THREE_BRIDGES, [1, 2, 3], 72)
+    [2]
+
+    >>> THREE_BRIDGES[2][BCIS_INDEX][0] = 1.0
+    >>> get_bridges_with_bci_below(THREE_BRIDGES, [1, 2, 3], 72)
+    [2, 3]
+    """
+
+    bridge_ids_set = set(bridge_ids)
+    bridges_bci_below = []
+
+    for bridge in bridge_data:
+        if bridge[ID_INDEX] not in bridge_ids_set:
+            continue
+
+        if bridge[BCIS_INDEX][0] <= ref_bci:
+            bridges_bci_below.append(bridge[ID_INDEX])
+
+    return bridges_bci_below
+
+
+# # We provide the header and doctring for this function to help get you
+# # started. Note the use of the built-in function deepcopy (see
+# # help(deepcopy)!): since this function modifies its input, we do not
+# # want to call it with THREE_BRIDGES, which would interfere with the
+# # use of THREE_BRIDGES in examples for other functions.
+# def inspect_bridges(bridge_data: list[list], bridge_ids: list[int], date: str,
+#                     bci: float) -> None:
+#     """Update the bridges in bridge_data with id in bridge_ids with the new
+#     date and BCI score for a new inspection.
+
+#     >>> bridges = deepcopy(THREE_BRIDGES)
+#     >>> inspect_bridges(bridges, [1], '09/15/2018', 71.9)
+#     >>> bridges == [
+#     ...   [1, 'Highway 24 Underpass at Highway 403', '403',
+#     ...    43.167233, -80.275567, '1965', '2014', '2009', 4,
+#     ...    [12.0, 19.0, 21.0, 12.0], 65, '09/15/2018',
+#     ...    [71.9, 72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]],
+#     ...   [2, 'WEST STREET UNDERPASS', '403', 43.164531, -80.251582,
+#     ...    '1963', '2014', '2007', 4, [12.2, 18.0, 18.0, 12.2],
+#     ...    61, '04/13/2012', [71.5, 68.1, 69.0, 69.4, 69.4, 70.3, 73.3]],
+#     ...   [3, 'STOKES RIVER BRIDGE', '6', 45.036739, -81.33579,
+#     ...    '1958', '2013', '', 1, [16.0], 18.4, '08/28/2013',
+#     ...    [85.1, 67.8, 67.4, 69.2, 70.0, 70.5, 75.1, 90.1]]]
+#     True
+
+#     """
+
+#     pass
 
 
 # # We provide the header and doctring for this function to help get you started.
@@ -312,36 +377,6 @@ def get_bridges_in_radius(
 #     >>> assign_inspectors(THREE_BRIDGES, [[38.691, -80.85], [43.20, -80.35]],
 #     ...                   2)
 #     [[], [1, 2]]
-
-#     """
-
-#     pass
-
-
-# # We provide the header and doctring for this function to help get you
-# # started. Note the use of the built-in function deepcopy (see
-# # help(deepcopy)!): since this function modifies its input, we do not
-# # want to call it with THREE_BRIDGES, which would interfere with the
-# # use of THREE_BRIDGES in examples for other functions.
-# def inspect_bridges(bridge_data: list[list], bridge_ids: list[int], date: str,
-#                     bci: float) -> None:
-#     """Update the bridges in bridge_data with id in bridge_ids with the new
-#     date and BCI score for a new inspection.
-
-#     >>> bridges = deepcopy(THREE_BRIDGES)
-#     >>> inspect_bridges(bridges, [1], '09/15/2018', 71.9)
-#     >>> bridges == [
-#     ...   [1, 'Highway 24 Underpass at Highway 403', '403',
-#     ...    43.167233, -80.275567, '1965', '2014', '2009', 4,
-#     ...    [12.0, 19.0, 21.0, 12.0], 65, '09/15/2018',
-#     ...    [71.9, 72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]],
-#     ...   [2, 'WEST STREET UNDERPASS', '403', 43.164531, -80.251582,
-#     ...    '1963', '2014', '2007', 4, [12.2, 18.0, 18.0, 12.2],
-#     ...    61, '04/13/2012', [71.5, 68.1, 69.0, 69.4, 69.4, 70.3, 73.3]],
-#     ...   [3, 'STOKES RIVER BRIDGE', '6', 45.036739, -81.33579,
-#     ...    '1958', '2013', '', 1, [16.0], 18.4, '08/28/2013',
-#     ...    [85.1, 67.8, 67.4, 69.2, 70.0, 70.5, 75.1, 90.1]]]
-#     True
 
 #     """
 
@@ -440,7 +475,6 @@ def get_bridges_in_radius(
 # # solution.
 # def format_bcis(bridge_record: list) -> None:
 #     """Format the bridge BCI data in the bridge record bridge_record.
-
 #     >>> record = ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
 #     ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
 #     ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
@@ -452,11 +486,8 @@ def get_bridges_in_radius(
 #     ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
 #     ...           [72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]]
 #     True
-
 #     """
-
 #     pass
-
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
