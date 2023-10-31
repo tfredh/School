@@ -299,8 +299,9 @@ def get_bridges_with_bci_below(
     >>> get_bridges_with_bci_below(THREE_BRIDGES, [1, 2, 3], 72)
     [2]
 
-    >>> THREE_BRIDGES[2][BCIS_INDEX][0] = 1.0
-    >>> get_bridges_with_bci_below(THREE_BRIDGES, [1, 2, 3], 72)
+    >>> test_bridge = deepcopy(THREE_BRIDGES)
+    >>> test_bridge[2][BCIS_INDEX][0] = 1.0
+    >>> get_bridges_with_bci_below(test_bridge, [1, 2, 3], 72)
     [2, 3]
     """
 
@@ -317,34 +318,76 @@ def get_bridges_with_bci_below(
     return bridges_bci_below
 
 
-# # We provide the header and doctring for this function to help get you
-# # started. Note the use of the built-in function deepcopy (see
-# # help(deepcopy)!): since this function modifies its input, we do not
-# # want to call it with THREE_BRIDGES, which would interfere with the
-# # use of THREE_BRIDGES in examples for other functions.
-# def inspect_bridges(bridge_data: list[list], bridge_ids: list[int], date: str,
-#                     bci: float) -> None:
-#     """Update the bridges in bridge_data with id in bridge_ids with the new
-#     date and BCI score for a new inspection.
+# We provide the header and doctring for this function to help get you
+# started. Note the use of the built-in function deepcopy (see
+# help(deepcopy)!): since this function modifies its input, we do not
+# want to call it with THREE_BRIDGES, which would interfere with the
+# use of THREE_BRIDGES in examples for other functions.
+def inspect_bridges(bridge_data: list[list], bridge_ids: list[int], date: str,
+                    bci: float) -> None:
+    """Update the bridges in bridge_data with id in bridge_ids with the new
+    date and BCI score for a new inspection.
 
-#     >>> bridges = deepcopy(THREE_BRIDGES)
-#     >>> inspect_bridges(bridges, [1], '09/15/2018', 71.9)
-#     >>> bridges == [
-#     ...   [1, 'Highway 24 Underpass at Highway 403', '403',
-#     ...    43.167233, -80.275567, '1965', '2014', '2009', 4,
-#     ...    [12.0, 19.0, 21.0, 12.0], 65, '09/15/2018',
-#     ...    [71.9, 72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]],
-#     ...   [2, 'WEST STREET UNDERPASS', '403', 43.164531, -80.251582,
-#     ...    '1963', '2014', '2007', 4, [12.2, 18.0, 18.0, 12.2],
-#     ...    61, '04/13/2012', [71.5, 68.1, 69.0, 69.4, 69.4, 70.3, 73.3]],
-#     ...   [3, 'STOKES RIVER BRIDGE', '6', 45.036739, -81.33579,
-#     ...    '1958', '2013', '', 1, [16.0], 18.4, '08/28/2013',
-#     ...    [85.1, 67.8, 67.4, 69.2, 70.0, 70.5, 75.1, 90.1]]]
-#     True
+    >>> bridges = deepcopy(THREE_BRIDGES)
+    >>> inspect_bridges(bridges, [1], '09/15/2018', 71.9)
+    >>> bridges[1:] == THREE_BRIDGES[1:]
+    True
+    >>> bridges[0] == THREE_BRIDGES[0]
+    False
+    >>> bridges[0][LAST_INSPECTED_INDEX] == THREE_BRIDGES[0][LAST_INSPECTED_INDEX]
+    False
+    >>> bridges[0][BCIS_INDEX] == THREE_BRIDGES[0][BCIS_INDEX]
+    False
+    >>> bridges == [
+    ...   [1, 'Highway 24 Underpass at Highway 403', '403',
+    ...    43.167233, -80.275567, '1965', '2014', '2009', 4,
+    ...    [12.0, 19.0, 21.0, 12.0], 65, '09/15/2018',
+    ...    [71.9, 72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]],
+    ...   [2, 'WEST STREET UNDERPASS', '403', 43.164531, -80.251582,
+    ...    '1963', '2014', '2007', 4, [12.2, 18.0, 18.0, 12.2],
+    ...    61, '04/13/2012', [71.5, 68.1, 69.0, 69.4, 69.4, 70.3, 73.3]],
+    ...   [3, 'STOKES RIVER BRIDGE', '6', 45.036739, -81.33579,
+    ...    '1958', '2013', '', 1, [16.0], 18.4, '08/28/2013',
+    ...    [85.1, 67.8, 67.4, 69.2, 70.0, 70.5, 75.1, 90.1]]]
+    True
 
-#     """
+    >>> inspect_bridges(bridges, [2, 3], '09/15/2030', 55.0)
+    >>> bridges == [
+    ...   [1, 'Highway 24 Underpass at Highway 403', '403',
+    ...    43.167233, -80.275567, '1965', '2014', '2009', 4,
+    ...    [12.0, 19.0, 21.0, 12.0], 65, '09/15/2018',
+    ...    [71.9, 72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]],
+    ...   [2, 'WEST STREET UNDERPASS', '403', 43.164531, -80.251582,
+    ...    '1963', '2014', '2007', 4, [12.2, 18.0, 18.0, 12.2],
+    ...    61, '09/15/2030', [55.0, 71.5, 68.1, 69.0, 69.4, 69.4, 70.3, 73.3]],
+    ...   [3, 'STOKES RIVER BRIDGE', '6', 45.036739, -81.33579,
+    ...    '1958', '2013', '', 1, [16.0], 18.4, '09/15/2030',
+    ...    [55.0, 85.1, 67.8, 67.4, 69.2, 70.0, 70.5, 75.1, 90.1]]]
+    True
 
-#     pass
+    >>> inspect_bridges(bridges, [], '01/01/2050', 100.0)
+    >>> bridges == [
+    ...   [1, 'Highway 24 Underpass at Highway 403', '403',
+    ...    43.167233, -80.275567, '1965', '2014', '2009', 4,
+    ...    [12.0, 19.0, 21.0, 12.0], 65, '09/15/2018',
+    ...    [71.9, 72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]],
+    ...   [2, 'WEST STREET UNDERPASS', '403', 43.164531, -80.251582,
+    ...    '1963', '2014', '2007', 4, [12.2, 18.0, 18.0, 12.2],
+    ...    61, '09/15/2030', [55.0, 71.5, 68.1, 69.0, 69.4, 69.4, 70.3, 73.3]],
+    ...   [3, 'STOKES RIVER BRIDGE', '6', 45.036739, -81.33579,
+    ...    '1958', '2013', '', 1, [16.0], 18.4, '09/15/2030',
+    ...    [55.0, 85.1, 67.8, 67.4, 69.2, 70.0, 70.5, 75.1, 90.1]]]
+    True
+    """
+
+    bridge_ids_set = set(bridge_ids)
+
+    for bridge in bridge_data:
+        if bridge[ID_INDEX] not in bridge_ids_set:
+            continue
+
+        bridge[LAST_INSPECTED_INDEX] = date
+        bridge[BCIS_INDEX].insert(0, bci)
 
 
 # # We provide the header and doctring for this function to help get you started.
