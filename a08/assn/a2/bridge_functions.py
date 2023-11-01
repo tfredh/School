@@ -45,7 +45,6 @@ def read_data(csv_file: TextIO) -> list[list[str]]:
 
     lines = csv.reader(csv_file)
     return list(lines)[2:]
-# print(read_data('/bridge_data.csv'))
 
 
 def calculate_distance(lat1: float, lon1: float,
@@ -492,111 +491,211 @@ def add_rehab(bridge_data: list[list], bridge_id: int, date: str,
 #     pass
 
 
-# # We provide the header and doctring for this function to help get you started.
-# def format_data(data: list[list[str]]) -> None:
-#     """Modify the uncleaned bridge data data, so that it contains proper
-#     bridge data, i.e., follows the format outlined in the 'Data
-#     formatting' section of the assignment handout.
-
-#     >>> d = THREE_BRIDGES_UNCLEANED
-#     >>> format_data(d)
-#     >>> d == THREE_BRIDGES
-#     True
-
-#     """
-
-#     pass
-
-
-# # This is a suggested helper function for format_data. We provide the
-# # header and doctring for this function to help you structure your
-# # solution.
-# def format_location(bridge_record: list) -> None:
-#     """Format latitude and longitude data in the bridge record bridge_record.
-
-#     >>> record = ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
-#     ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
-#     ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
-#     ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
-#     ...           '70.5', '', '70.7', '72.9', '']
-#     >>> format_location(record)
-#     >>> record == ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
-#     ...           43.167233, -80.275567, '1965', '2014', '2009', '4',
-#     ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
-#     ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
-#     ...           '70.5', '', '70.7', '72.9', '']
-#     True
-#     """
-
-#     pass
+# We provide the header and doctring for this function to help get you started.
+THREE_BRIDGES = [
+    [1, 'Highway 24 Underpass at Highway 403', '403', 43.167233, -80.275567,
+     '1965', '2014', '2009', 4, [12.0, 19.0, 21.0, 12.0], 65.0, '04/13/2012',
+     [72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]],
+    [2, 'WEST STREET UNDERPASS', '403', 43.164531, -80.251582,
+     '1963', '2014', '2007', 4, [12.2, 18.0, 18.0, 12.2], 61.0, '04/13/2012',
+     [71.5, 68.1, 69.0, 69.4, 69.4, 70.3, 73.3]],
+    [3, 'STOKES RIVER BRIDGE', '6', 45.036739, -81.33579,
+     '1958', '2013', '', 1, [16.0], 18.4, '08/28/2013',
+     [85.1, 67.8, 67.4, 69.2, 70.0, 70.5, 75.1, 90.1]]
+]
+THREE_BRIDGES_UNCLEANED = [
+    ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403', '43.167233',
+     '-80.275567', '1965', '2014', '2009', '4',
+     'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012', '72.3', '',
+     '72.3', '', '69.5', '', '70', '', '70.3', '', '70.5', '', '70.7', '72.9',
+     ''],
+    ['1 -  43/', 'WEST STREET UNDERPASS', '403', '43.164531', '-80.251582',
+     '1963', '2014', '2007', '4',
+     'Total=60.4  (1)=12.2;(2)=18;(3)=18;(4)=12.2;', '61', '04/13/2012',
+     '71.5', '', '71.5', '', '68.1', '', '69', '', '69.4', '', '69.4', '',
+     '70.3', '73.3', ''],
+    ['2 -   4/', 'STOKES RIVER BRIDGE', '6', '45.036739', '-81.33579', '1958',
+     '2013', '', '1', 'Total=16  (1)=16;', '18.4', '08/28/2013', '85.1',
+     '85.1', '', '67.8', '', '67.4', '', '69.2', '70', '70.5', '', '75.1', '',
+     '90.1', '']
+]
 
 
-# # This is a suggested helper function for format_data. We provide the
-# # header and doctring for this function to help you structure your
-# # solution.
-# def format_spans(bridge_record: list) -> None:
-#     """Format the bridge spans data in the bridge record bridge_record.
+def format_data(data: list[list[str]]) -> None:
+    """Modify the uncleaned bridge data data, so that it contains proper
+    bridge data, i.e., follows the format outlined in the 'Data
+    formatting' section of the assignment handout.
 
-#     >>> record = ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
-#     ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
-#     ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
-#     ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
-#     ...           '70.5', '', '70.7', '72.9', '']
-#     >>> format_spans(record)
-#     >>> record == ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
-#     ...           '43.167233', '-80.275567', '1965', '2014', '2009', 4,
-#     ...           [12.0, 19.0, 21.0, 12.0], '65', '04/13/2012',
-#     ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
-#     ...           '70.5', '', '70.7', '72.9', '']
-#     True
+    >>> d = THREE_BRIDGES_UNCLEANED
+    >>> format_data(d)
+    >>> d == THREE_BRIDGES
+    True
+    """
 
-#     """
+    for i in range(len(data)):
+        unformatted_bridge = data[i]
 
-#     pass
+        # bridge ID
+        unformatted_bridge[ID_INDEX] = i + 1
+
+        # bridge Name
+        unformatted_bridge[NAME_INDEX] = unformatted_bridge[NAME_INDEX]
+
+        # bridge Highway
+        unformatted_bridge[HIGHWAY_INDEX] = unformatted_bridge[HIGHWAY_INDEX]
+
+        # bridge Latitude
+        # bridge Longitude
+        format_location(unformatted_bridge)
+
+        # bridge Year Built
+        unformatted_bridge[YEAR_INDEX] = unformatted_bridge[YEAR_INDEX]
+
+        # bridge Last Major Rehab
+        unformatted_bridge[LAST_MAJOR_INDEX] = unformatted_bridge[LAST_MAJOR_INDEX]
+
+        # bridge Last Minor Rehab
+        unformatted_bridge[LAST_MINOR_INDEX] = unformatted_bridge[LAST_MINOR_INDEX]
+
+        # bridge Number of Spans
+        # bridge Span Details
+        format_spans(unformatted_bridge)
+
+        # bridge Bridge Length
+        format_length(unformatted_bridge)
+
+        # bridge Last Inspected Date -- already in proper date format
+
+        # bridge BCIs
+        format_bcis(unformatted_bridge)
 
 
-# # This is a suggested helper function for format_data. We provide the
-# # header and doctring for this function to help you structure your
-# # solution.
-# def format_length(bridge_record: list) -> None:
-#     """Format the bridge length data in the bridge record bridge_record.
+# This is a suggested helper function for format_data. We provide the
+# header and doctring for this function to help you structure your
+# solution.
+def format_spans(bridge_record: list) -> None:
+    """Format the bridge spans data in the bridge record bridge_record.
 
-#     >>> record = ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
-#     ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
-#     ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
-#     ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
-#     ...           '70.5', '', '70.7', '72.9', '']
-#     >>> format_length(record)
-#     >>> record == ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
-#     ...            '43.167233', '-80.275567', '1965', '2014', '2009', '4',
-#     ...            'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', 65, '04/13/2012',
-#     ...            '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
-#     ...            '70.5', '', '70.7', '72.9', '']
-#     True
+    >>> record = ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
+    ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
+    ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
+    ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
+    ...           '70.5', '', '70.7', '72.9', '']
+    >>> format_spans(record)
+    >>> record == ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
+    ...           '43.167233', '-80.275567', '1965', '2014', '2009', 4,
+    ...           [12.0, 19.0, 21.0, 12.0], '65', '04/13/2012',
+    ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
+    ...           '70.5', '', '70.7', '72.9', '']
+    True
+    """
 
-#     """
+    # bridge Number of Spans
+    bridge_record[NUM_SPANS_INDEX] = int(bridge_record[NUM_SPANS_INDEX])
 
-#     pass
+    # bridge Span Details
+    span_details: str = bridge_record[SPAN_DETAILS_INDEX]
+    span_froms = span_details.split(FROM_SEP)[2:]
+
+    formatted_spans = [
+        float(span[: span.index(TO_SEP)])
+        for span
+        in span_froms
+    ]
+
+    bridge_record[SPAN_DETAILS_INDEX] = formatted_spans
 
 
-# # This is a suggested helper function for format_data. We provide the
-# # header and doctring for this function to help you structure your
-# # solution.
-# def format_bcis(bridge_record: list) -> None:
-#     """Format the bridge BCI data in the bridge record bridge_record.
-#     >>> record = ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
-#     ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
-#     ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
-#     ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
-#     ...           '70.5', '', '70.7', '72.9', '']
-#     >>> format_bcis(record)
-#     >>> record == ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
-#     ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
-#     ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
-#     ...           [72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]]
-#     True
-#     """
-#     pass
+# This is a suggested helper function for format_data. We provide the
+# header and doctring for this function to help you structure your
+# solution.
+def format_location(bridge_record: list) -> None:
+    """Format latitude and longitude data in the bridge record bridge_record.
+
+    >>> record = ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
+    ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
+    ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
+    ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
+    ...           '70.5', '', '70.7', '72.9', '']
+    >>> format_location(record)
+    >>> record == ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
+    ...           43.167233, -80.275567, '1965', '2014', '2009', '4',
+    ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
+    ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
+    ...           '70.5', '', '70.7', '72.9', '']
+    True
+    """
+
+    bridge_record[LAT_INDEX] = float(bridge_record[LAT_INDEX])
+    bridge_record[LON_INDEX] = float(bridge_record[LON_INDEX])
+
+
+# This is a suggested helper function for format_data. We provide the
+# header and doctring for this function to help you structure your
+# solution.
+def format_length(bridge_record: list) -> None:
+    """Format the bridge length data in the bridge record bridge_record.
+
+    >>> record = ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
+    ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
+    ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
+    ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
+    ...           '70.5', '', '70.7', '72.9', '']
+    >>> format_length(record)
+    >>> record == ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
+    ...            '43.167233', '-80.275567', '1965', '2014', '2009', '4',
+    ...            'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', 65, '04/13/2012',
+    ...            '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
+    ...            '70.5', '', '70.7', '72.9', '']
+    True
+    """
+
+    bridge_record[LENGTH_INDEX] = (
+        float(bridge_record[LENGTH_INDEX])
+        if len(bridge_record[LENGTH_INDEX])
+        else 0.0
+    )
+
+
+# This is a suggested helper function for format_data. We provide the
+# header and doctring for this function to help you structure your
+# solution.
+def format_bcis(bridge_record: list) -> None:
+    """Format the bridge BCI data in the bridge record bridge_record.
+    >>> record = ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
+    ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
+    ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
+    ...           '72.3', '', '72.3', '', '69.5', '', '70', '', '70.3', '',
+    ...           '70.5', '', '70.7', '72.9', '']
+    >>> format_bcis(record)
+
+    >>> record[:-1] == ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
+    ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
+    ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012']
+    True
+    >>> record[-1] == [72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]
+    True
+    >>> record == ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403',
+    ...           '43.167233', '-80.275567', '1965', '2014', '2009', '4',
+    ...           'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012',
+    ...           [72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]]
+    True
+    """
+
+    formatted_bcis = []
+
+    # skip the first bci since it's repeated
+    for i in range(BCIS_INDEX + 1, len(bridge_record)):
+
+        if bridge_record[i] != "":
+            formatted_bcis.append(float(bridge_record[i]))
+
+    for i in range(len(bridge_record) - 1, BCIS_INDEX - 1, -1):
+        bridge_record.pop()
+
+    bridge_record.append(formatted_bcis)
+
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
