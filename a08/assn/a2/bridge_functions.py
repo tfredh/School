@@ -322,11 +322,11 @@ def get_bridges_containing(bridge_data: list[list], search: str) -> list[int]:
     Returns a list of ids of all bridges in `bridge_data` whose names 
     contain the search string, `search`. The search should be case-insensitive.
 
-    When called with the example THREE_BRIDGES and the search string 'underpass', 
-    the function should return the list [1, 2]. Note that when called with the 
-    example THREE_BRIDGES and the search string 'pass', the function should also 
-    return the list [1, 2], i.e. the function looks for part of the name, not 
-    necessarily the entire name.
+    When called with the example THREE_BRIDGES and the search string 
+    'underpass', the function should return the list [1, 2]. Note that 
+    when called with the example THREE_BRIDGES and the search string 
+    'pass', the function should also return the list [1, 2], i.e. the 
+    function looks for part of the name, not necessarily the entire name.
 
     >>> get_bridges_containing(THREE_BRIDGES, 'underpass')
     [1, 2]
@@ -431,11 +431,13 @@ def add_rehab(bridge_data: list[list], bridge_id: int, date: str,
     >>> bridges = deepcopy(THREE_BRIDGES)
     >>> add_rehab(bridges, 1, '09/15/2023', False)
     >>> bridges == [
-    ...    [1, 'Highway 24 Underpass at Highway 403', '403', 43.167233, -80.275567,
-    ...    '1965', '2014', '2023', 4, [12.0, 19.0, 21.0, 12.0], 65, '04/13/2012',
-    ...    [72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]],
+    ...    [1, 'Highway 24 Underpass at Highway 403', '403', 43.167233, 
+    ...     -80.275567, '1965', '2014', '2023', 4, [12.0, 19.0, 21.0, 
+    ...     12.0], 65, '04/13/2012', 
+    ...     [72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]],
     ...    [2, 'WEST STREET UNDERPASS', '403', 43.164531, -80.251582,
-    ...    '1963', '2014', '2007', 4, [12.2, 18.0, 18.0, 12.2], 61.0, '04/13/2012',
+    ...    '1963', '2014', '2007', 4, [12.2, 18.0, 18.0, 12.2], 61.0, 
+    ...     '04/13/2012',
     ...    [71.5, 68.1, 69.0, 69.4, 69.4, 70.3, 73.3]],
     ...    [3, 'STOKES RIVER BRIDGE', '6', 45.036739, -81.33579,
     ...    '1958', '2013', '', 1, [16.0], 18.4, '08/28/2013',
@@ -487,10 +489,14 @@ def format_data(data: list[list[str]]) -> None:
         unformatted_bridge[YEAR_INDEX] = unformatted_bridge[YEAR_INDEX]
 
         # bridge Last Major Rehab
-        unformatted_bridge[LAST_MAJOR_INDEX] = unformatted_bridge[LAST_MAJOR_INDEX]
+        unformatted_bridge[LAST_MAJOR_INDEX] = (
+            unformatted_bridge[LAST_MAJOR_INDEX]
+        )
 
         # bridge Last Minor Rehab
-        unformatted_bridge[LAST_MINOR_INDEX] = unformatted_bridge[LAST_MINOR_INDEX]
+        unformatted_bridge[LAST_MINOR_INDEX] = (
+            unformatted_bridge[LAST_MINOR_INDEX]
+        )
 
         # bridge Number of Spans
         # bridge Span Details
@@ -653,11 +659,9 @@ def assign_inspectors(bridge_data: list[list], inspectors: list[list[float]],
     [[1], [2]]
     >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [43.10, -80.15]], 2)
     [[1, 2], []]
-
     >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [45.0368, -81.34]],
     ...                   2)
     [[1, 2], [3]]
-
     >>> assign_inspectors(THREE_BRIDGES, [[38.691, -80.85], [43.20, -80.35]],
     ...                   2)
     [[], [1, 2]]
@@ -667,11 +671,17 @@ def assign_inspectors(bridge_data: list[list], inspectors: list[list[float]],
     assigned_bridges = set()
 
     for i in range(len(inspectors)):
+        # assign inspectors by priority from high to low
         for priority_bci, priority_radius in (
             (HIGH_PRIORITY_BCI, HIGH_PRIORITY_RADIUS),
             (MEDIUM_PRIORITY_BCI, MEDIUM_PRIORITY_RADIUS),
             (LOW_PRIORITY_BCI, LOW_PRIORITY_RADIUS)
         ):
+            # unnecessary but slight optimization
+            if inspectors_bridges[i] == max_bridges:
+                break
+
+            # find all bridges in current priority radius
             bridges_in_radius = get_bridges_in_radius(
                 bridge_data,
                 inspectors[i][0],
@@ -679,21 +689,38 @@ def assign_inspectors(bridge_data: list[list], inspectors: list[list[float]],
                 priority_radius
             )
 
+            # find all bridges with current priority bci within
+            # the priority bci radius
             bridges_in_priority = get_bridges_with_bci_below(
                 bridge_data,
                 bridges_in_radius,
                 priority_bci
             )
 
-            while len(inspectors_bridges[i]) < max_bridges and bridges_in_priority:
+            # assign as many of the bridges of the given priority to
+            # the inspector
+            while (
+                len(inspectors_bridges[i]) < max_bridges
+                and bridges_in_priority
+            ):
+                # if a bridge was already assigned, skip it
                 if bridges_in_priority[0] in assigned_bridges:
                     bridges_in_priority.pop(0)
                     continue
 
+                # assign bridge to inspector
                 assigned_bridge_id = bridges_in_priority.pop(0)
                 inspectors_bridges[i].append(assigned_bridge_id)
                 assigned_bridges.add(assigned_bridge_id)
 
+    return inspectors_bridges
+    """
+    Where B_i=bridge i, I_i=inspector #i
+    Code does not work for case: B_1 I_1 B_2 I_2, as I_1 may be assigned
+    to B_2, and I_2 wouldn't be assigned to anything.
+
+    Turns out this was not needed for this assignment
+    Assigns remaining unassigned bridges to inspectors at random
     for bridge in bridge_data:
         if bridge[ID_INDEX] in assigned_bridges:
             continue
@@ -701,9 +728,9 @@ def assign_inspectors(bridge_data: list[list], inspectors: list[list[float]],
         for inspector in inspectors_bridges:
             if len(inspector) < max_bridges:
                 inspector.append(bridge[ID_INDEX])
+                assigned_bridges.add(bridge[ID_INDEX])
                 break
-
-    return inspectors_bridges
+    """
 
 
 if __name__ == '__main__':
