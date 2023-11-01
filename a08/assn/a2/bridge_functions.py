@@ -714,23 +714,6 @@ def assign_inspectors(bridge_data: list[list], inspectors: list[list[float]],
                 assigned_bridges.add(assigned_bridge_id)
 
     return inspectors_bridges
-    """
-    Where B_i=bridge i, I_i=inspector #i
-    Code does not work for case: B_1 I_1 B_2 I_2, as I_1 may be assigned
-    to B_2, and I_2 wouldn't be assigned to anything.
-
-    Turns out this was not needed for this assignment
-    Assigns remaining unassigned bridges to inspectors at random
-    for bridge in bridge_data:
-        if bridge[ID_INDEX] in assigned_bridges:
-            continue
-
-        for inspector in inspectors_bridges:
-            if len(inspector) < max_bridges:
-                inspector.append(bridge[ID_INDEX])
-                assigned_bridges.add(bridge[ID_INDEX])
-                break
-    """
 
 
 if __name__ == '__main__':
