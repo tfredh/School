@@ -737,13 +737,13 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod()
 
-    # To test your code with larger lists, you can uncomment the code below to
-    # read data from the provided CSV file.
+    # # To test your code with larger lists, you can uncomment the code below to
+    # # read data from the provided CSV file.
     # with open('bridge_data.csv', encoding='utf-8') as bridge_data_file:
     #     BRIDGES = read_data(bridge_data_file)
     # format_data(BRIDGES)
 
-    # For example:
+    # # For example:
     # print(get_bridge(BRIDGES, 3))
     # EXPECTED = [3, 'NORTH PARK STEET UNDERPASS', '403', 43.165918, -80.263791,
     #             '1962', '2013', '2009', 4, [12.2, 18.0, 18.0, 12.2], 60.8,
