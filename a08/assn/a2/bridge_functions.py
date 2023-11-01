@@ -455,72 +455,7 @@ def add_rehab(bridge_data: list[list], bridge_id: int, date: str,
         ] = date[-4:]
 
 
-# # We provide the header and doctring for this function to help get you started.
-# def assign_inspectors(bridge_data: list[list], inspectors: list[list[float]],
-#                       max_bridges: int) -> list[list[int]]:
-#     """Return a list of bridge IDs from bridge data bridge_data, to be
-#     assigned to each inspector in inspectors. inspectors is a list
-#     containing (latitude, longitude) pairs representing each
-#     inspector's location. At most max_bridges are assigned to each
-#     inspector, and each bridge is assigned once (to the first
-#     inspector that can inspect that bridge).
-
-#     See the "Assigning Inspectors" section of the handout for more details.
-
-#     >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15], [42.10, -81.15]], 0)
-#     [[], []]
-#     >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 1)
-#     [[1]]
-#     >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 2)
-#     [[1, 2]]
-#     >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 3)
-#     [[1, 2]]
-#     >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [43.10, -80.15]], 1)
-#     [[1], [2]]
-#     >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [43.10, -80.15]], 2)
-#     [[1, 2], []]
-#     >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [45.0368, -81.34]],
-#     ...                   2)
-#     [[1, 2], [3]]
-#     >>> assign_inspectors(THREE_BRIDGES, [[38.691, -80.85], [43.20, -80.35]],
-#     ...                   2)
-#     [[], [1, 2]]
-
-#     """
-
-#     pass
-
-
 # We provide the header and doctring for this function to help get you started.
-THREE_BRIDGES = [
-    [1, 'Highway 24 Underpass at Highway 403', '403', 43.167233, -80.275567,
-     '1965', '2014', '2009', 4, [12.0, 19.0, 21.0, 12.0], 65.0, '04/13/2012',
-     [72.3, 69.5, 70.0, 70.3, 70.5, 70.7, 72.9]],
-    [2, 'WEST STREET UNDERPASS', '403', 43.164531, -80.251582,
-     '1963', '2014', '2007', 4, [12.2, 18.0, 18.0, 12.2], 61.0, '04/13/2012',
-     [71.5, 68.1, 69.0, 69.4, 69.4, 70.3, 73.3]],
-    [3, 'STOKES RIVER BRIDGE', '6', 45.036739, -81.33579,
-     '1958', '2013', '', 1, [16.0], 18.4, '08/28/2013',
-     [85.1, 67.8, 67.4, 69.2, 70.0, 70.5, 75.1, 90.1]]
-]
-THREE_BRIDGES_UNCLEANED = [
-    ['1 -  32/', 'Highway 24 Underpass at Highway 403', '403', '43.167233',
-     '-80.275567', '1965', '2014', '2009', '4',
-     'Total=64  (1)=12;(2)=19;(3)=21;(4)=12;', '65', '04/13/2012', '72.3', '',
-     '72.3', '', '69.5', '', '70', '', '70.3', '', '70.5', '', '70.7', '72.9',
-     ''],
-    ['1 -  43/', 'WEST STREET UNDERPASS', '403', '43.164531', '-80.251582',
-     '1963', '2014', '2007', '4',
-     'Total=60.4  (1)=12.2;(2)=18;(3)=18;(4)=12.2;', '61', '04/13/2012',
-     '71.5', '', '71.5', '', '68.1', '', '69', '', '69.4', '', '69.4', '',
-     '70.3', '73.3', ''],
-    ['2 -   4/', 'STOKES RIVER BRIDGE', '6', '45.036739', '-81.33579', '1958',
-     '2013', '', '1', 'Total=16  (1)=16;', '18.4', '08/28/2013', '85.1',
-     '85.1', '', '67.8', '', '67.4', '', '69.2', '70', '70.5', '', '75.1', '',
-     '90.1', '']
-]
-
-
 def format_data(data: list[list[str]]) -> None:
     """Modify the uncleaned bridge data data, so that it contains proper
     bridge data, i.e., follows the format outlined in the 'Data
@@ -694,6 +629,81 @@ def format_bcis(bridge_record: list) -> None:
         bridge_record.pop()
 
     bridge_record.append(formatted_bcis)
+
+
+# We provide the header and doctring for this function to help get you started.
+def assign_inspectors(bridge_data: list[list], inspectors: list[list[float]],
+                      max_bridges: int) -> list[list[int]]:
+    """Return a list of bridge IDs from bridge data bridge_data, to be
+    assigned to each inspector in inspectors. inspectors is a list
+    containing (latitude, longitude) pairs representing each
+    inspector's location. At most max_bridges are assigned to each
+    inspector, and each bridge is assigned once (to the first
+    inspector that can inspect that bridge).
+
+    >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15], [42.10, -81.15]], 0)
+    [[], []]
+    >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 1)
+    [[1]]
+    >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 2)
+    [[1, 2]]
+    >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 3)
+    [[1, 2]]
+    >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [43.10, -80.15]], 1)
+    [[1], [2]]
+    >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [43.10, -80.15]], 2)
+    [[1, 2], []]
+
+    >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [45.0368, -81.34]],
+    ...                   2)
+    [[1, 2], [3]]
+
+    >>> assign_inspectors(THREE_BRIDGES, [[38.691, -80.85], [43.20, -80.35]],
+    ...                   2)
+    [[], [1, 2]]
+    """
+
+    inspectors_bridges = [[] for _ in range(len(inspectors))]
+    assigned_bridges = set()
+
+    for i in range(len(inspectors)):
+        for priority_bci, priority_radius in (
+            (HIGH_PRIORITY_BCI, HIGH_PRIORITY_RADIUS),
+            (MEDIUM_PRIORITY_BCI, MEDIUM_PRIORITY_RADIUS),
+            (LOW_PRIORITY_BCI, LOW_PRIORITY_RADIUS)
+        ):
+            bridges_in_radius = get_bridges_in_radius(
+                bridge_data,
+                inspectors[i][0],
+                inspectors[i][1],
+                priority_radius
+            )
+
+            bridges_in_priority = get_bridges_with_bci_below(
+                bridge_data,
+                bridges_in_radius,
+                priority_bci
+            )
+
+            while len(inspectors_bridges[i]) < max_bridges and bridges_in_priority:
+                if bridges_in_priority[0] in assigned_bridges:
+                    bridges_in_priority.pop(0)
+                    continue
+
+                assigned_bridge_id = bridges_in_priority.pop(0)
+                inspectors_bridges[i].append(assigned_bridge_id)
+                assigned_bridges.add(assigned_bridge_id)
+
+    for bridge in bridge_data:
+        if bridge[ID_INDEX] in assigned_bridges:
+            continue
+
+        for inspector in inspectors_bridges:
+            if len(inspector) < max_bridges:
+                inspector.append(bridge[ID_INDEX])
+                break
+
+    return inspectors_bridges
 
 
 if __name__ == '__main__':
