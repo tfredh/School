@@ -106,6 +106,16 @@ class TestGetMostPublishedAuthors(unittest.TestCase):
         msg = message(arxiv_copy, expected, actual)
         self.assertEqual(actual, expected, msg)
 
+    def test_mutation(self):
+        """Test get_most_published_authors with a dictionary that
+        shouldn't be mutated.
+        """
+
+        arxiv_copy = deepcopy(self.example)
+        get_mpas(self.example)
+        msg = message(arxiv_copy, arxiv_copy, self.example)
+        self.assertEqual(self.example, arxiv_copy, msg)
+
 
 def message(test_case: dict, expected: list, actual: object) -> str:
     """Return an error message saying the function call

@@ -265,14 +265,21 @@ def read_arxiv_file(afile: TextIO) -> ArxivType:
                 passed_nulls += 1
                 continue
 
-            match passed_nulls:
-                case 0:
-                    book[AUTHORS] = book.get(
-                        AUTHORS, []) + [tuple(meta_info[i].split(SEPARATOR))]
-                    book[AUTHORS] = sorted(book[AUTHORS])
-                case 1:
-                    book[ABSTRACT] = (book.get(ABSTRACT, '') +
-                                      '\n' + meta_info[i]).strip()
+            authors = []
+            while meta_info[i] != '':
+                authors.append(meta_info[i])
+                i += 1
+            authors.sort()
+
+            
+
+            # if passed_nulls == 0:
+            #     book[AUTHORS] = book.get(
+            #         AUTHORS, []) + [tuple(meta_info[i].split(SEPARATOR))]
+            #     book[AUTHORS] = sorted(book[AUTHORS])
+            # elif passed_nulls == 1:
+            #     book[ABSTRACT] = (book.get(ABSTRACT, '') +
+            #                         '\n' + meta_info[i]).strip()
 
         books[book[ID]] = book
 
