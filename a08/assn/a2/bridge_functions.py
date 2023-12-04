@@ -637,83 +637,137 @@ def format_bcis(bridge_record: list) -> None:
     bridge_record.append(formatted_bcis)
 
 
-# We provide the header and doctring for this function to help get you started.
+def assign_priority(priority_bci: float, priority_radius: float,
+                    bridge_data: list[list], inspector_location: list[float],
+                    max_bridges: int, inspector_index: int,
+                    inspectors_bridges: list[list[int]], assigned_bridges: list[int]
+                    ) -> list[int]:
+
+    bridges_in_radius = get_bridges_in_radius(
+        bridge_data,
+        inspector_location[0],
+        inspector_location[1],
+        priority_radius
+    )
+
+    bridges_in_priority = get_bridges_with_bci_below(
+        bridge_data,
+        bridges_in_radius,
+        priority_bci
+    )
+
+    for _ in range(max_bridges - len(inspectors_bridges[inspector_index])):
+        if bridges_in_priority and bridges_in_priority[0] not in assigned_bridges:
+            bridge_id = bridges_in_priority[0]
+
+            inspectors_bridges[inspector_index].append(bridge_id)
+            assigned_bridges.append(bridge_id)
+            bridges_in_priority.pop(0)
+
+
 def assign_inspectors(bridge_data: list[list], inspectors: list[list[float]],
                       max_bridges: int) -> list[list[int]]:
-    """Return a list of bridge IDs from bridge data bridge_data, to be
-    assigned to each inspector in inspectors. inspectors is a list
-    containing (latitude, longitude) pairs representing each
-    inspector's location. At most max_bridges are assigned to each
-    inspector, and each bridge is assigned once (to the first
-    inspector that can inspect that bridge).
-
-    >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15], [42.10, -81.15]], 0)
-    [[], []]
-    >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 1)
-    [[1]]
-    >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 2)
-    [[1, 2]]
-    >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 3)
-    [[1, 2]]
-    >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [43.10, -80.15]], 1)
-    [[1], [2]]
-    >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [43.10, -80.15]], 2)
-    [[1, 2], []]
-    >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [45.0368, -81.34]],
-    ...                   2)
-    [[1, 2], [3]]
-    >>> assign_inspectors(THREE_BRIDGES, [[38.691, -80.85], [43.20, -80.35]],
-    ...                   2)
-    [[], [1, 2]]
-    """
-
     inspectors_bridges = [[] for _ in range(len(inspectors))]
-    assigned_bridges = set()
+    assigned_bridges = []
 
-    for i in range(len(inspectors)):
-        # assign inspectors by priority from high to low
-        for priority_bci, priority_radius in (
-            (HIGH_PRIORITY_BCI, HIGH_PRIORITY_RADIUS),
-            (MEDIUM_PRIORITY_BCI, MEDIUM_PRIORITY_RADIUS),
-            (LOW_PRIORITY_BCI, LOW_PRIORITY_RADIUS)
-        ):
-            # unnecessary but slight optimization
-            if inspectors_bridges[i] == max_bridges:
-                break
+    for inspector_index in range(len(inspectors)):
+        inspector_location = inspectors[inspector_index]
 
-            # find all bridges in current priority radius
-            bridges_in_radius = get_bridges_in_radius(
+        priorities = [[HIGH_PRIORITY_BCI, HIGH_PRIORITY_RADIUS], [
+            MEDIUM_PRIORITY_BCI, MEDIUM_PRIORITY_RADIUS], [LOW_PRIORITY_BCI, LOW_PRIORITY_RADIUS]]
+
+        for i in priorities:
+            assign_priority(
+                i[0],
+                i[1],
                 bridge_data,
-                inspectors[i][0],
-                inspectors[i][1],
-                priority_radius
+                inspector_location,
+                max_bridges,
+                inspector_index,
+                inspectors_bridges,
+                assigned_bridges
             )
-
-            # find all bridges with current priority bci within
-            # the priority bci radius
-            bridges_in_priority = get_bridges_with_bci_below(
-                bridge_data,
-                bridges_in_radius,
-                priority_bci
-            )
-
-            # assign as many of the bridges of the given priority to
-            # the inspector
-            while (
-                len(inspectors_bridges[i]) < max_bridges
-                and bridges_in_priority
-            ):
-                # if a bridge was already assigned, skip it
-                if bridges_in_priority[0] in assigned_bridges:
-                    bridges_in_priority.pop(0)
-                    continue
-
-                # assign bridge to inspector
-                assigned_bridge_id = bridges_in_priority.pop(0)
-                inspectors_bridges[i].append(assigned_bridge_id)
-                assigned_bridges.add(assigned_bridge_id)
 
     return inspectors_bridges
+
+
+# We provide the header and doctring for this function to help get you started.
+# def assign_inspectors(bridge_data: list[list], inspectors: list[list[float]],
+#                       max_bridges: int) -> list[list[int]]:
+#     """Return a list of bridge IDs from bridge data bridge_data, to be
+#     assigned to each inspector in inspectors. inspectors is a list
+#     containing (latitude, longitude) pairs representing each
+#     inspector's location. At most max_bridges are assigned to each
+#     inspector, and each bridge is assigned once (to the first
+#     inspector that can inspect that bridge).
+
+#     >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15], [42.10, -81.15]], 0)
+#     [[], []]
+#     >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 1)
+#     [[1]]
+#     >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 2)
+#     [[1, 2]]
+#     >>> assign_inspectors(THREE_BRIDGES, [[43.10, -80.15]], 3)
+#     [[1, 2]]
+#     >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [43.10, -80.15]], 1)
+#     [[1], [2]]
+#     >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [43.10, -80.15]], 2)
+#     [[1, 2], []]
+#     >>> assign_inspectors(THREE_BRIDGES, [[43.20, -80.35], [45.0368, -81.34]],
+#     ...                   2)
+#     [[1, 2], [3]]
+#     >>> assign_inspectors(THREE_BRIDGES, [[38.691, -80.85], [43.20, -80.35]],
+#     ...                   2)
+#     [[], [1, 2]]
+#     """
+
+#     inspectors_bridges = [[] for _ in range(len(inspectors))]
+#     assigned_bridges = set()
+
+#     for i in range(len(inspectors)):
+#         # assign inspectors by priority from high to low
+#         for priority_bci, priority_radius in (
+#             (HIGH_PRIORITY_BCI, HIGH_PRIORITY_RADIUS),
+#             (MEDIUM_PRIORITY_BCI, MEDIUM_PRIORITY_RADIUS),
+#             (LOW_PRIORITY_BCI, LOW_PRIORITY_RADIUS)
+#         ):
+#             # unnecessary but slight optimization
+#             if inspectors_bridges[i] == max_bridges:
+#                 break
+
+#             # find all bridges in current priority radius
+#             bridges_in_radius = get_bridges_in_radius(
+#                 bridge_data,
+#                 inspectors[i][0],
+#                 inspectors[i][1],
+#                 priority_radius
+#             )
+
+#             # find all bridges with current priority bci within
+#             # the priority bci radius
+#             bridges_in_priority = get_bridges_with_bci_below(
+#                 bridge_data,
+#                 bridges_in_radius,
+#                 priority_bci
+#             )
+
+#             # assign as many of the bridges of the given priority to
+#             # the inspector
+#             while (
+#                 len(inspectors_bridges[i]) < max_bridges
+#                 and bridges_in_priority
+#             ):
+#                 # if a bridge was already assigned, skip it
+#                 if bridges_in_priority[0] in assigned_bridges:
+#                     bridges_in_priority.pop(0)
+#                     continue
+
+#                 # assign bridge to inspector
+#                 assigned_bridge_id = bridges_in_priority.pop(0)
+#                 inspectors_bridges[i].append(assigned_bridge_id)
+#                 assigned_bridges.add(assigned_bridge_id)
+
+#     return inspectors_bridges
 
 
 if __name__ == '__main__':

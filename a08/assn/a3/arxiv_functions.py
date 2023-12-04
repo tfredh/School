@@ -20,7 +20,6 @@ from constants import (ID, TITLE, CREATED, MODIFIED, AUTHORS,
                        ABSTRACT, END, SEPARATOR, NameType,
                        ArticleValueType, ArticleType, ArxivType)
 
-
 EXAMPLE_ARXIV = {
     '008': {
         'identifier': '008',
@@ -64,6 +63,7 @@ Toronto is the best university.'''},
         'abstract': '''This is a very strange article with no title
 and no authors.'''}
 }
+# print(EXAMPLE_ARXIV)
 
 EXAMPLE_BY_AUTHOR = {
     ('Ponce', 'Marcelo'): ['008', '827'],
@@ -72,19 +72,6 @@ EXAMPLE_BY_AUTHOR = {
     ('Breuss', 'Nataliya'): ['031'],
     ('Pancer', 'Richard'): ['067']
 }
-
-
-# We provide the header and docstring for this function to get you
-# started and to demonstrate that there are no docstring examples in
-# functions that read from files.
-def read_arxiv_file(afile: TextIO) -> ArxivType:
-    """Return a dict containing all arxiv information in afile.
-
-    Precondition: afile is open for reading
-                  afile is in the format described in the handout
-    """
-
-    pass
 
 
 # We provide the header and part of a docstring for this function to
@@ -97,10 +84,125 @@ def make_author_to_articles(
 
     >>> make_author_to_articles(EXAMPLE_ARXIV) == EXAMPLE_BY_AUTHOR
     True
-
+    >>> make_author_to_articles({'gg': EXAMPLE_ARXIV['042']})
+    {}
     """
 
-    pass
+    author_to_articles = {}
+
+    for article_id in id_to_article:
+        for author in id_to_article[article_id]['authors']:
+            if author not in author_to_articles:
+                author_to_articles[author] = []
+            author_to_articles[author].append(article_id)
+
+    return author_to_articles
+
+
+def get_coauthors(id_to_article: ArxivType,
+                  author_name: NameType) -> list[NameType]:
+    """
+    Returns a list of coauthors of the author specified by the second argument.
+    (Two people are coauthors if they are authors of the same article.) The
+    list should be sorted in lexicographic order.
+
+    >>> get_coauthors(EXAMPLE_ARXIV, ('Tafliovich', 'Anya Y.'))
+    [('Bretscher', 'Anna'), ('Ponce', 'Marcelo')]
+    >>> get_coauthors({'gg': EXAMPLE_ARXIV['042']}, ('Tafliovich, Anya Y.'))
+    []
+    """
+
+    coauthors = set()
+    for article_id in id_to_article:
+        article = id_to_article[article_id]
+        if author_name not in article['authors']:
+            continue
+
+        for author in article['authors']:
+            if author != author_name:
+                coauthors.add(author)
+
+    return sorted(list(coauthors))
+
+
+def get_most_published_authors(id_to_article: ArxivType) -> list[NameType]:
+    """
+    Returns a list of authors who published the most articles.
+    Note that this list has more than one author only in case of a tie
+
+    >>> get_most_published_authors(EXAMPLE_ARXIV)
+    [('Bretscher', 'Anna'), ('Ponce', 'Marcelo'), ('Tafliovich', 'Anya Y.')]
+    >>> get_most_published_authors({'gg': EXAMPLE_ARXIV['008']})
+    [('Ponce', 'Marcelo'), ('Tafliovich', 'Anya Y.')]
+    >>> get_most_published_authors({'gg': EXAMPLE_ARXIV['031']})
+    [('Breuss', 'Nataliya')]
+    >>> get_most_published_authors({'gg': EXAMPLE_ARXIV['042']})
+    []
+    """
+
+    most_published = []
+    most_pubs = 0
+
+    author_to_articles = make_author_to_articles(id_to_article)
+    for author, articles in author_to_articles.items():
+        if len(articles) == most_pubs:
+            most_published.append(author)
+        elif len(articles) > most_pubs:
+            most_published = [author]
+            most_pubs = len(articles)
+
+    return sorted(most_published)
+
+
+def suggest_collaborators(id_to_article: ArxivType,
+                          author_name: NameType) -> list[NameType]:
+    """
+    Returns a list of authors with whom the author specified by the second
+    argument is encouraged to collaborate. The list should be sorted in
+    lexicographic order.
+
+    The list of suggested collaborators should include all authors who are
+    coauthors of this author's coauthors. In other words, if author A wrote
+    an article with author B and author B wrote an article with author C,
+    then we will include C as suggested collaborator for A.
+
+    >>> suggest_collaborators(EXAMPLE_ARXIV, ('Pancer', 'Richard'))
+    [('Ponce', 'Marcelo'), ('Tafliovich', 'Anya Y.')]
+    >>> suggest_collaborators(EXAMPLE_ARXIV, ('Tafliovich', 'Anya Y.'))
+    [('Pancer', 'Richard')]
+    >>> suggest_collaborators(EXAMPLE_ARXIV, ('g', 'g'))
+    []
+    """
+
+    coauthors = get_coauthors(id_to_article, author_name)
+    suggested_collaborators = set()
+
+    for coauthor in coauthors:
+        for cocoauthor in get_coauthors(id_to_article, coauthor):
+            if cocoauthor != author_name and cocoauthor not in coauthors:
+                suggested_collaborators.add(cocoauthor)
+
+    return sorted(list(suggested_collaborators))
+
+
+def has_prolific_authors(author_to_ids: dict[NameType, list[str]],
+                         article: ArticleType,
+                         prolific_threshold: int) -> bool:
+    """
+    Returns True if and only if the article (second argument) has at least
+    one author who is considered prolific.
+
+    >>> has_prolific_authors(EXAMPLE_BY_AUTHOR, EXAMPLE_ARXIV['008'], 2)
+    True
+    >>> has_prolific_authors(EXAMPLE_BY_AUTHOR, EXAMPLE_ARXIV['031'], 2)
+    False
+    """
+
+    for author in article['authors']:
+        if len(author_to_ids[author]) >= prolific_threshold:
+            return True
+
+    return False
 
 
 # We provide the header and part of a docstring for this function to
@@ -121,23 +223,76 @@ def keep_prolific_authors(id_to_article: ArxivType,
     True
     """
 
-    pass
+    id_to_article_copy = copy.deepcopy(id_to_article)
+
+    for article_id in id_to_article_copy:
+        if not has_prolific_authors(
+            make_author_to_articles(id_to_article),
+            id_to_article[article_id],
+            min_publications
+        ):
+            del id_to_article[article_id]
+
+
+# We provide the header and docstring for this function to get you
+# started and to demonstrate that there are no docstring examples in
+# functions that read from files.
+def read_arxiv_file(afile: TextIO) -> ArxivType:
+    """Return a dict containing all arxiv information in afile.
+    Precondition: afile is open for reading
+                  afile is in the format described in the handout
+    """
+
+    raw_books = afile.read().split(END)[: -1]
+
+    books = {}
+    for raw_book in raw_books:
+        book = {}
+        meta_info = raw_book.strip().split("\n")
+        # print(meta_info)
+
+        book[ID] = meta_info[0] if meta_info[0] != '' else None
+        book[TITLE] = meta_info[1] if meta_info[1] != '' else None
+        book[CREATED] = meta_info[2] if meta_info[2] != '' else None
+        book[MODIFIED] = meta_info[3] if meta_info[3] != '' else None
+
+        passed_nulls = 0
+        for i in range(4, len(meta_info)):
+            if meta_info[i] == '':
+                if i == 4:
+                    book[AUTHORS] = []
+
+                passed_nulls += 1
+                continue
+
+            match passed_nulls:
+                case 0:
+                    book[AUTHORS] = book.get(
+                        AUTHORS, []) + [tuple(meta_info[i].split(SEPARATOR))]
+                    book[AUTHORS] = sorted(book[AUTHORS])
+                case 1:
+                    book[ABSTRACT] = (book.get(ABSTRACT, '') +
+                                      '\n' + meta_info[i]).strip()
+
+        books[book[ID]] = book
+
+    # print(books)
+    return books
 
 
 if __name__ == '__main__':
-
     import doctest
     doctest.testmod()
 
     # uncomment to test with example data files
-    # with open('example_data.txt', encoding='utf-8') as example_data:
-    #     RESULT = read_arxiv_file(example_data)
-    #     print('Did we produce a correct dict? ',
-    #           RESULT == EXAMPLE_ARXIV)
+    with open('example_data.txt', encoding='utf-8') as example_data:
+        RESULT = read_arxiv_file(example_data)
+        print('Did we produce a correct dict? ',
+              RESULT == EXAMPLE_ARXIV)
 
-    # # uncomment to work with a larger data set
-    # with open('data.txt', encoding='utf-8') as data_txt:
-    #     EXAMPLE = read_arxiv_file(data_txt)
+    # uncomment to work with a larger data set
+    with open('data.txt', encoding='utf-8') as data_txt:
+        EXAMPLE = read_arxiv_file(data_txt)
 
     # EXAMPLE_AUTHOR_TO_ARTICLE = make_author_to_articles(EXAMPLE)
     # EXAMPLE_MOST_PUBLISHED = get_most_published_authors(EXAMPLE)

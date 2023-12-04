@@ -77,6 +77,34 @@ class TestGetMostPublishedAuthors(unittest.TestCase):
         self.assertEqual(actual, expected, msg)
 
     # TODO: add a complete test suite here
+    def test_empty(self):
+        """Test get_most_published_authors with an empty dictionary."""
+
+        arxiv_copy = deepcopy(self.example)
+        expected = []
+        actual = get_mpas({})
+        msg = message(arxiv_copy, expected, actual)
+        self.assertEqual(actual, expected, msg)
+
+    def test_one(self):
+        """Test get_most_published_authors with one author."""
+
+        arxiv_copy = deepcopy(self.example)
+        expected = [('Breuss', 'Nataliya')]
+        actual = get_mpas({'031': self.example['031']})
+        msg = message(arxiv_copy, expected, actual)
+        self.assertEqual(actual, expected, msg)
+
+    def test_many(self):
+        """Test get_most_published_authors with many authors."""
+
+        arxiv_copy = deepcopy(self.example)
+        expected = [('Bretscher', 'Anna'),
+                    ('Ponce', 'Marcelo'),
+                    ('Tafliovich', 'Anya Y.')]
+        actual = get_mpas(self.example)
+        msg = message(arxiv_copy, expected, actual)
+        self.assertEqual(actual, expected, msg)
 
 
 def message(test_case: dict, expected: list, actual: object) -> str:
