@@ -91,7 +91,7 @@ def make_author_to_articles(
     author_to_articles = {}
 
     for article_id in id_to_article:
-        for author in id_to_article[article_id]['authors']:
+        for author in id_to_article[article_id][AUTHORS]:
             if author not in author_to_articles:
                 author_to_articles[author] = []
             author_to_articles[author].append(article_id)
@@ -115,10 +115,10 @@ def get_coauthors(id_to_article: ArxivType,
     coauthors = set()
     for article_id in id_to_article:
         article = id_to_article[article_id]
-        if author_name not in article['authors']:
+        if author_name not in article[AUTHORS]:
             continue
 
-        for author in article['authors']:
+        for author in article[AUTHORS]:
             if author != author_name:
                 coauthors.add(author)
 
@@ -198,7 +198,7 @@ def has_prolific_authors(author_to_ids: dict[NameType, list[str]],
     False
     """
 
-    for author in article['authors']:
+    for author in article[AUTHORS]:
         if len(author_to_ids[author]) >= prolific_threshold:
             return True
 
@@ -265,21 +265,14 @@ def read_arxiv_file(afile: TextIO) -> ArxivType:
                 passed_nulls += 1
                 continue
 
-            authors = []
-            while meta_info[i] != '':
-                authors.append(meta_info[i])
-                i += 1
-            authors.sort()
-
-            
-
-            # if passed_nulls == 0:
-            #     book[AUTHORS] = book.get(
-            #         AUTHORS, []) + [tuple(meta_info[i].split(SEPARATOR))]
-            #     book[AUTHORS] = sorted(book[AUTHORS])
-            # elif passed_nulls == 1:
-            #     book[ABSTRACT] = (book.get(ABSTRACT, '') +
-            #                         '\n' + meta_info[i]).strip()
+            match passed_nulls:
+                case 0:
+                    book[AUTHORS] = book.get(
+                        AUTHORS, []) + [tuple(meta_info[i].split(SEPARATOR))]
+                    book[AUTHORS] = sorted(book[AUTHORS])
+                case 1:
+                    book[ABSTRACT] = (book.get(ABSTRACT, '') +
+                                      '\n' + meta_info[i]).strip()
 
         books[book[ID]] = book
 
