@@ -48,6 +48,16 @@ int count_leap_years(int start_year, int end_year)
 {
     // TODO: Complete this function.
     int count = 0;
+
+    for (int year = start_year; year < end_year + 1; year++)
+    {
+        if (is_leap_year(year))
+        {
+            count++;
+        }
+    }
+
+    return count;
 }
 
 /**
@@ -68,7 +78,21 @@ int count_leap_years(int start_year, int end_year)
 int number_of_days_in_month(int month, int year)
 {
     // TODO: Complete this function.
-    return -1;
+
+    const int leap_year = is_leap_year(year);
+
+    if (month == 2)
+    {
+        return leap_year ? 29 : 28;
+    }
+    else if (month == 4 || month == 6 || month == 9 || month == 11)
+    {
+        return 30;
+    }
+    else
+    {
+        return 31;
+    }
 }
 
 // ===========================================================================
@@ -108,6 +132,25 @@ int main()
     if (number_of_days_in_month(2, 2023) != 28)
     {
         printf("February 2023 has 28 days.\n");
+        exit(1);
+    }
+
+    // more tests for number_of_days_in_month
+    if (
+        number_of_days_in_month(2, 2024) != 29 ||
+        number_of_days_in_month(2, 1996) != 29 ||
+        number_of_days_in_month(4, 2021) != 30 ||
+        number_of_days_in_month(6, 2021) != 30 ||
+        number_of_days_in_month(9, 2021) != 30 ||
+        number_of_days_in_month(11, 2021) != 30 ||
+        number_of_days_in_month(1, 2021) != 31 ||
+        number_of_days_in_month(3, 2021) != 31 ||
+        number_of_days_in_month(5, 2021) != 31 ||
+        number_of_days_in_month(7, 2021) != 31 ||
+        number_of_days_in_month(8, 2021) != 31 ||
+        number_of_days_in_month(10, 2021) != 31)
+    {
+        printf("FAIL\n");
         exit(1);
     }
 
