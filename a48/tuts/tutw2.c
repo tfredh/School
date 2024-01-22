@@ -116,27 +116,28 @@ int main()
     //     printf("x = %.3f\tsin(x) = %.3f\n", x, sin(x));
     // }
 
-    // for (float x = 0; x <= 2 * pi; x += 0.3)
-    // {
-    //     // print only vals between .5 and .75 positive and negative
-    //     if ((sin(x) >= 0.5 && sin(x) <= 0.75) ||
-    //         (sin(x) >= -0.75 && sin(x) <= -0.5))
-    //     {
-    //         printf("x = %.3f\tsin(x) = %.3f\n", x, sin(x));
-    //     }
-    // }
-
-    // terminate when all positives printed
+    // 0.5 <= sin(x) <= 0.75 or -0.75 <= sin(x) <= -0.5
     for (float x = 0; x <= 2 * pi; x += 0.3)
     {
-        const float sinResult = sin(x);
-        if (sinResult < 0)
+        // print only vals between .5 and .75 positive and negative
+        if ((sin(x) >= 0.5 && sin(x) <= 0.75) ||
+            (sin(x) >= -0.75 && sin(x) <= -0.5))
         {
-            break;
+            printf("x = %.3f\tsin(x) = %.3f\n", x, sin(x));
         }
-
-        printf("x = %.3f\tsin(x) = %.3f\n", x, sinResult);
     }
+
+    // terminate when all positives printed
+    // for (float x = 0; x <= 2 * pi; x += 0.3)
+    // {
+    //     const float sinResult = sin(x);
+    //     if (sinResult < 0)
+    //     {
+    //         break;
+    //     }
+
+    //     printf("x = %.3f\tsin(x) = %.3f\n", x, sinResult);
+    // }
 }
 
 // ***********************************************
