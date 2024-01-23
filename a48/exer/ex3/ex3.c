@@ -89,7 +89,15 @@ int last_close_index_of(double arr_to_search[], int search_len,
 {
     // TODO: Implement this function.
 
-    return 0;
+    int last = -1;
+    
+    for (int i = 0; i < search_len; i++) {
+        for (int j = 0; j < find_len; j++) {
+            if (!is_close_enough(arr_to_search[i + j], arr_to_find[j])) {
+                break;
+            }
+        }
+    }
 }
 
 // ===========================================================================
