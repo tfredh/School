@@ -90,14 +90,21 @@ int last_close_index_of(double arr_to_search[], int search_len,
     // TODO: Implement this function.
 
     int last = -1;
-    
-    for (int i = 0; i < search_len; i++) {
-        for (int j = 0; j < find_len; j++) {
-            if (!is_close_enough(arr_to_search[i + j], arr_to_find[j])) {
+    for (int i = 0; i <= search_len - find_len; i++)
+    {
+        int same = 0;
+        for (int j = 0; j < find_len; j++)
+        {
+            if (!is_close_enough(arr_to_search[i + j], arr_to_find[j]))
                 break;
-            }
+            same += 1;
         }
+
+        if (same == find_len)
+            last = i;
     }
+
+    return last;
 }
 
 // ===========================================================================
@@ -146,6 +153,36 @@ int main()
     if (idx != expected_idx)
     {
         printf("Expected to find array at %d, got %d\n", expected_idx, idx);
+        exit(1);
+    }
+
+    double arr_to_search2[10] = {1, 2, 3, 1, 2, 3};
+    double arr_to_find2[3] = {1, 2, 3};
+    int idx2 = last_close_index_of(arr_to_search2, 10, arr_to_find2, 3);
+    int expected_idx2 = 3;
+    if (idx2 != expected_idx2)
+    {
+        printf("Expected to find array at %d, got %d\n", expected_idx2, idx2);
+        exit(1);
+    }
+
+    double arr_to_search3[3] = {1, 2, 3};
+    double arr_to_find3[0] = {};
+    int idx3 = last_close_index_of(arr_to_search3, 3, arr_to_find3, 0);
+    int expected_idx3 = 3;
+    if (idx3 != expected_idx3)
+    {
+        printf("Expected to find array at %d, got %d\n", expected_idx3, idx3);
+        exit(1);
+    }
+
+    double arr_to_search4[0] = {};
+    double arr_to_find4[0] = {};
+    int idx4 = last_close_index_of(arr_to_search4, 0, arr_to_find4, 0);
+    int expected_idx4 = 0;
+    if (idx4 != expected_idx4)
+    {
+        printf("Expected to find array at %d, got %d\n", expected_idx4, idx4);
         exit(1);
     }
 
