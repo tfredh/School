@@ -32,10 +32,11 @@
 
 int myStrlen(char *string) {
     int len = 0;
-    while (string[len]) {
+    while (*(string + len) != '\0') {
         len++;
     }
 
+    // printf("len %d\n", len);
     return len;
 }
 
@@ -44,9 +45,9 @@ void reverse(char *string) {
 
     // printf("len %d /2 %d\n", len, len / 2);
     for (int i = 0; i < len / 2; i++) {
-        char temp = string[i];
-        string[i] = string[len - 1 - i];
-        string[len - i - 1] = temp;
+        char temp = *(string + i);
+        *(string + i) = *(string + len - 1 - i);
+        *(string + len - i - 1) = temp;
     }
 }
 
@@ -67,7 +68,7 @@ void replace_all(char *source, char *dest, char *find, char *replace) {
     // unless there's already something in that place
     // use \0 as a string-neutral character
     for (int i = 0; i < 1024; i++) {
-        dest[i] = '\0';
+        *(dest + i) = '\0';
     }
 
     int sourceLen = myStrlen(source);
@@ -77,7 +78,7 @@ void replace_all(char *source, char *dest, char *find, char *replace) {
     for (int i = 0; i < sourceLen; i++) {
         int found = 1;
         for (int j = 0; j < findLen; j++) {
-            if (source[i + j] != find[j]) {
+            if (*(source + i + j) != *(find + j)) {
                 found = 0;
                 break;
             }
@@ -88,12 +89,12 @@ void replace_all(char *source, char *dest, char *find, char *replace) {
             for (int k = 0; k < replaceLen; k++) {
                 // printf("len dest %d, dest %s\n", myStrlen(dest), dest);
 
-                dest[myStrlen(dest)] = replace[k];
+                *(dest + myStrlen(dest)) = *(replace + k);
             }
 
             i += findLen - 1;
         } else {
-            dest[myStrlen(dest)] = source[i];
+            *(dest + myStrlen(dest)) = *(source + i);
         }
     }
 
