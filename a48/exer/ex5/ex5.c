@@ -136,6 +136,10 @@ int number_of_offerings(Offering offerings[], int length, char *course_name) {
  */
 void find_best_professor(Offering offerings[], int length,
                          char *output_professor) {
+    if (length == 0) {
+        output_professor = "";
+    }
+
     output_professor[0] = '\0';
     int mostOffer = 0;
 
