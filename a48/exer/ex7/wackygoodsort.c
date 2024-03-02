@@ -71,19 +71,6 @@ LinkedListNode *convert_array_to_list(LinkedListNode *array[], int size) {
     array[size - 1]->next = NULL;
     // printf("done converting array to list\n");
     return array[0];
-
-    // LinkedListNode *dummy = malloc(sizeof(LinkedListNode));
-
-    // LinkedListNode *curr = dummy;
-    // for (int i = 0; i < size; i++) {
-    //     curr->next = array[i];
-    //     curr = curr->next;
-    // }
-
-    // curr->next = NULL;
-    // LinkedListNode *new_head = dummy->next;
-    // free(dummy);
-    // return new_head;
 }
 
 /**
