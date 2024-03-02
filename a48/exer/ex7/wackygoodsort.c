@@ -64,11 +64,14 @@ void convert_list_to_array(LinkedListNode *head, LinkedListNode *array[]) {
  * @return Pointer to the new head of the linked list.
  */
 LinkedListNode *convert_array_to_list(LinkedListNode *array[], int size) {
+    if (size == 0)
+        return NULL;
+
     for (int i = 0; i < size - 1; i++) {
         array[i]->next = array[i + 1];
     }
-
     array[size - 1]->next = NULL;
+
     // printf("done converting array to list\n");
     return array[0];
 }

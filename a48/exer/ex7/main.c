@@ -76,7 +76,7 @@ int main() {
     time(&start_time);
 
     // Sort the list.
-    printf("Beginning to sort ...\n");
+    printf("Beginning to sort .. .\n");
     head = sort_linked_list(head, compare_nodes);
 
     time_t end_time;
