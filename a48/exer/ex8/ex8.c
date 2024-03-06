@@ -178,6 +178,10 @@ int main() {
     root->right = allocate_new_node(37);
     root->right->left = allocate_new_node(15);
 
+    // root->right->left = allocate_new_node(36);
+    // root->right->left->left = allocate_new_node(15);
+    // // assert 8 items (only +1 as 37 is duplicated)
+
     int len = getTreeLength(root);
     printf("items: %d\n", len);
     BSTNode *items[len];
