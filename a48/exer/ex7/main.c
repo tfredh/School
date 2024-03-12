@@ -85,7 +85,7 @@ int main() {
     time_t elapsed_time = end_time - start_time;
     printf("Sorting the list took %ld seconds ...\n", elapsed_time);
 
-    // LinkedListNode *curr = head;
+    LinkedListNode *curr = head;
     // for (int i = 0; i < SAMPLE_SIZE; i++) {
     //     printf("%s ", curr->major);
     //     curr = curr->next;

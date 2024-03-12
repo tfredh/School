@@ -53,7 +53,16 @@ int sum_array_elements(int int_array[], int array_size) {
  */
 void compute_occurrence_array(int occurrence_array[ASCII_CHARACTER_SET_SIZE],
                               char *string) {
-    // TODO: Complete this function.
+    // clean array
+    for (int i = 0; i < ASCII_CHARACTER_SET_SIZE; i++) {
+        occurrence_array[i] = 0;
+    }
+
+    for (int i = 0; i < strlen(string); i++) {
+        char c = string[i];
+
+        occurrence_array[(int)c] += 1;
+    }
 }
 
 /**
@@ -66,8 +75,14 @@ void compute_occurrence_array(int occurrence_array[ASCII_CHARACTER_SET_SIZE],
  * character set.
  */
 int count_positive_occurrences(int occurrence_array[ASCII_CHARACTER_SET_SIZE]) {
-    // TODO: Complete this function.
-    return -1;
+    int more = 0;
+
+    for (int i = 0; i < ASCII_CHARACTER_SET_SIZE; i++) {
+        if (occurrence_array[i] >= 1)
+            more += 1;
+    }
+
+    return more;
 }
 
 /**
@@ -91,10 +106,98 @@ int count_positive_occurrences(int occurrence_array[ASCII_CHARACTER_SET_SIZE]) {
  * characters. The array size should be ASCII_CHARACTER_SET_SIZE.
  * @return A pointer to the head of the created linked list of WackyLinkedNodes.
  */
+// helpers convert_array_to_list, sort_linked_list
+WackyLinkedNode *convert_array_to_list(WackyLinkedNode *array[], int size) {
+    if (size == 0)
+        return NULL;
+
+    for (int i = 0; i < size - 1; i++) {
+        array[i]->next = array[i + 1];
+    }
+    array[size - 1]->next = NULL;
+
+    return array[0];
+}
+WackyLinkedNode *sort_linked_list(WackyLinkedNode *nodeArray[], int size,
+                                  int (*compare_function)(const void *,
+                                                          const void *)) {
+    if (size == 0) {
+        return NULL;
+    }
+
+    qsort(nodeArray, size, sizeof(nodeArray[0]), compare_function);
+    WackyLinkedNode *new_head = convert_array_to_list(nodeArray, size);
+    return new_head;
+}
+int compare_wacky_nodes(const void *void_ptr_a, const void *void_ptr_b) {
+    WackyLinkedNode *node_a = *((WackyLinkedNode **)void_ptr_a);
+    WackyLinkedNode *node_b = *((WackyLinkedNode **)void_ptr_b);
+
+    // Compare weight first.
+    if (node_a->val->weight > node_b->val->weight) {
+        return 1;
+    } else if (node_a->val->weight < node_b->val->weight) {
+        return -1;
+    }
+
+    // Compare ASCII character val last.
+    if (node_a->val->val > node_b->val->val) {
+        return 1;
+    } else if (node_a->val->val < node_b->val->val) {
+        return -1;
+    }
+    // above always returns as node->val->val is unique
+}
 WackyLinkedNode *
 create_wacky_list(int occurrence_array[ASCII_CHARACTER_SET_SIZE]) {
-    // TODO: Complete this function.
-    return NULL;
+    int occurences = count_positive_occurrences(occurrence_array);
+    WackyLinkedNode *linkedNodes[occurences];
+    int totalWeight =
+        sum_array_elements(occurrence_array, ASCII_CHARACTER_SET_SIZE);
+
+    int added = 0;
+    for (int i = 0; i < ASCII_CHARACTER_SET_SIZE; i++) {
+        if (occurrence_array[i] == 0) {
+            continue;
+        }
+
+        double weight = (double)occurrence_array[i] / (double)totalWeight;
+        char c = i;
+        // printf("occ %d, tot %d, weight %f c %c\n", occurences, totalWeight,
+        //        weight, c);
+
+        WackyTreeNode *newTreeNode = new_leaf_node(weight, c);
+        WackyLinkedNode *newListNode = new_linked_node(newTreeNode);
+
+        // add new list node to array
+        linkedNodes[added++] = newListNode;
+    }
+
+    // // first ! 0.003790
+    // printf("first %c %f\n", linkedNodes[1]->val->val,
+    //        linkedNodes[1]->val->weight);
+    // // first , 0.014529
+    // printf("first %c %f\n", linkedNodes[2]->val->val,
+    //        linkedNodes[2]->val->weight);
+    // printf("\n");
+
+    // sort list nodes
+    sort_linked_list(linkedNodes, occurences, compare_wacky_nodes);
+    // int i = 0;
+    // while (linkedNodes[i]->val->weight == 0.000315855969677826890000000000) {
+    //     printf("first %c %.30f\n", linkedNodes[i]->val->val,
+    //            linkedNodes[i]->val->weight);
+    //     i += 1;
+    // }
+    // printf("first %c %.30f\n", linkedNodes[i]->val->val,
+    //        linkedNodes[i]->val->weight);
+    // printf("last %c %f\n", linkedNodes[occurences - 2]->val->val,
+    //        linkedNodes[occurences - 2]->val->weight);
+    // printf("last %c %f\n", linkedNodes[occurences - 1]->val->val,
+    //        linkedNodes[occurences - 1]->val->weight);
+    // printf("\n");
+
+    
 }
 
 /**
