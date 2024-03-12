@@ -197,7 +197,7 @@ create_wacky_list(int occurrence_array[ASCII_CHARACTER_SET_SIZE]) {
     //        linkedNodes[occurences - 1]->val->weight);
     // printf("\n");
 
-    
+    return convert_array_to_list(linkedNodes, occurences);
 }
 
 /**

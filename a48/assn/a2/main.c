@@ -284,38 +284,36 @@ int main() {
 
     WackyLinkedNode *linked_list = create_wacky_list(occurrence_array);
 
-    // {  // The first element should be '?' with weight '~0.00032'.
-    //     WackyTreeNode* tree_node = linked_list->val;
-    //     if (tree_node->val != '?' ||
-    //         fabs(tree_node->weight - 0.00032) >= R_ERROR) {
-    //         printf(
-    //             "The first character in the linked list should be '?' with "
-    //             "probably ~0.00032. Got '%c' %.5f instead.\n",
-    //             tree_node->val, tree_node->weight);
-    //         exit(1);
-    //     }
-    // }
+    { // The first element should be '?' with weight '~0.00032'.
+        WackyTreeNode *tree_node = linked_list->val;
+        if (tree_node->val != '?' ||
+            fabs(tree_node->weight - 0.00032) >= R_ERROR) {
+            printf("The first character in the linked list should be '?' with "
+                   "probably ~0.00032. Got '%c' %.5f instead.\n",
+                   tree_node->val, tree_node->weight);
+            exit(1);
+        }
+    }
 
-    // {  // The last element should be ' ' with weight '~0.19109'.
-    //     WackyLinkedNode* last_node = linked_list;
-    //     while (last_node->next != NULL) {
-    //         last_node = last_node->next;
-    //     }
+    { // The last element should be ' ' with weight '~0.19109'.
+        WackyLinkedNode *last_node = linked_list;
+        while (last_node->next != NULL) {
+            last_node = last_node->next;
+        }
 
-    //     WackyTreeNode* tree_node = last_node->val;
-    //     if (tree_node->val != ' ' ||
-    //         fabs(tree_node->weight - 0.19109) >= R_ERROR) {
-    //         printf(
-    //             "The last character in the linked list should be ' ' with "
-    //             "probably ~0.19109. Got '%c' %.5f instead.\n",
-    //             tree_node->val, tree_node->weight);
-    //         exit(1);
-    //     }
-    // }
+        WackyTreeNode *tree_node = last_node->val;
+        if (tree_node->val != ' ' ||
+            fabs(tree_node->weight - 0.19109) >= R_ERROR) {
+            printf("The last character in the linked list should be ' ' with "
+                   "probably ~0.19109. Got '%c' %.5f instead.\n",
+                   tree_node->val, tree_node->weight);
+            exit(1);
+        }
+    }
 
-    // /**
-    //  * Testing merge_wacky_list ...
-    //  */
+    /**
+     * Testing merge_wacky_list ...
+     */
 
     // WackyTreeNode* binary_tree = merge_wacky_list(linked_list);
 
