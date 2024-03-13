@@ -20,18 +20,18 @@ struct WackyTreeNode {
     double weight;
     char val;
 
-    WackyTreeNode* left;
-    WackyTreeNode* right;
+    WackyTreeNode *left;
+    WackyTreeNode *right;
 };
 
 typedef struct WackyLinkedNode WackyLinkedNode;
 struct WackyLinkedNode {
-    WackyTreeNode* val;
-    WackyLinkedNode* next;
+    WackyTreeNode *val;
+    WackyLinkedNode *next;
 };
 
-WackyTreeNode* new_leaf_node(double weight, char val) {
-    WackyTreeNode* node = (WackyTreeNode*)malloc(sizeof(WackyTreeNode));
+WackyTreeNode *new_leaf_node(double weight, char val) {
+    WackyTreeNode *node = (WackyTreeNode *)malloc(sizeof(WackyTreeNode));
     node->weight = weight;
     node->val = val;
     node->left = NULL;
@@ -39,8 +39,8 @@ WackyTreeNode* new_leaf_node(double weight, char val) {
     return node;
 }
 
-WackyTreeNode* new_branch_node(WackyTreeNode* left, WackyTreeNode* right) {
-    WackyTreeNode* node = (WackyTreeNode*)malloc(sizeof(WackyTreeNode));
+WackyTreeNode *new_branch_node(WackyTreeNode *left, WackyTreeNode *right) {
+    WackyTreeNode *node = (WackyTreeNode *)malloc(sizeof(WackyTreeNode));
     node->weight = left->weight + right->weight;
     node->val = '\0';
     node->left = left;
@@ -48,9 +48,26 @@ WackyTreeNode* new_branch_node(WackyTreeNode* left, WackyTreeNode* right) {
     return node;
 }
 
-WackyLinkedNode* new_linked_node(WackyTreeNode* val) {
-    WackyLinkedNode* node = (WackyLinkedNode*)malloc(sizeof(WackyLinkedNode));
+WackyLinkedNode *new_linked_node(WackyTreeNode *val) {
+    WackyLinkedNode *node = (WackyLinkedNode *)malloc(sizeof(WackyLinkedNode));
     node->val = val;
     node->next = NULL;
     return node;
+}
+
+void trav(WackyTreeNode *root) {
+    if (root == NULL)
+        return;
+
+    printf("%c %d", root->val, root->weight);
+    trav(root->left);
+    trav(root->right);
+}
+int getLength(WackyLinkedNode *head) {
+    int length = 0;
+    while (head != NULL) {
+        length++;
+        head = head->next;
+    }
+    return length;
 }

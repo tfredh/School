@@ -228,12 +228,96 @@ create_wacky_list(int occurrence_array[ASCII_CHARACTER_SET_SIZE]) {
  * empty.
  */
 WackyTreeNode *merge_wacky_list(WackyLinkedNode *linked_list) {
-    // TODO: Complete this function.
-    return NULL;
+    if (linked_list == NULL)
+        return NULL;
+
+    while (linked_list && linked_list->next) {
+        // // debugging
+        // {
+        //     printf("length = %d\n", getLength(linked_list));
+        //     WackyLinkedNode *current = linked_list;
+        //     while (current != NULL) {
+        //         printf("current->val->val = '%c', current->val->weight =
+        //         %f\n",
+        //                current->val->val, current->val->weight);
+        //         current = current->next;
+        //     }
+        //     double sum = 0;
+        //     WackyLinkedNode *curr = linked_list;
+        //     while (curr != NULL) {
+        //         sum += curr->val->weight;
+        //         curr = curr->next;
+        //     }
+        //     printf("sum = %f\n", sum);
+        //     printf("---------------------------------------------\n");
+        //     printf("---------------------------------------------\n");
+        //     printf("---------------------------------------------\n");
+        // }
+
+        // copy new tree's left and right
+        WackyLinkedNode *newLeft = linked_list;
+        WackyLinkedNode *newRight = linked_list->next;
+
+        // delete from linked list
+        linked_list = linked_list->next->next;
+        newLeft->next = NULL;
+        newRight->next = NULL;
+
+        // create the new linked list node
+        WackyTreeNode *newTreeNode =
+            new_branch_node(newLeft->val, newRight->val);
+        free(newLeft);
+        free(newRight);
+        WackyLinkedNode *newConnected = new_linked_node(newTreeNode);
+
+        // add the new node into it's place in the main list
+        WackyLinkedNode *curr = linked_list;
+        if (curr == NULL)
+            return newConnected->val;
+        else {
+            WackyLinkedNode *dummy = new_linked_node(NULL);
+            dummy->next = curr;
+            WackyLinkedNode *prev = dummy;
+
+            // current->val->val = 'D', current->val->weight = 0.000316;
+            // current->val->val = 'L', current->val->weight = 0.000316;
+            // current->val->val = 'q', current->val->weight = 0.000316;
+            // current->val->val = 'x', current->val->weight = 0.000316;
+            // current->val->val = 'S', current->val->weight = 0.000632;
+            // current->val->val = 'A', current->val->weight = 0.000948;
+            // current->val->val = 'E', current->val->weight = 0.000948;
+
+            int added = 0;
+            while (curr != NULL) {
+                if (newConnected->val->weight <= curr->val->weight) {
+                    prev->next = newConnected;
+                    newConnected->next = curr;
+
+                    WackyLinkedNode *resHead = dummy->next;
+                    free(dummy);
+                    linked_list = resHead;
+                    added = 1;
+                    break;
+                }
+
+                curr = curr->next;
+                prev = prev->next;
+            }
+
+            // if newConnected should be inserted at the back
+            if (!added) {
+                prev->next = newConnected;
+                newConnected->next = NULL; // just making sure
+            }
+        }
+    }
+
+    return linked_list->val;
 }
 
 /**
- * Given a tree, this function calculates and returns the height of the tree.
+ * Given a tree, this function calculates and returns the height of the
+ * tree.
  *
  * @note An empty tree (NULL) has a height of 0.
  *
@@ -246,18 +330,22 @@ int get_height(WackyTreeNode *tree) {
 }
 
 /**
- * Given a WackyTree and a specific character, this function computes the
- * traversal of the character based on its position in the tree. Movement to the
- * LEFT is FALSE, and movement to the RIGHT is TRUE. The steps are written
- * inside boolean_array, and the total number of steps is stored in array_size.
+ * Given a WackyTree and a specific character, this function computes
+ * the traversal of the character based on its position in the tree.
+ * Movement to the LEFT is FALSE, and movement to the RIGHT is TRUE. The
+ * steps are written inside boolean_array, and the total number of steps
+ * is stored in array_size.
  *
- * @note the size of boolean_array is greater than or equal to get_height(tree)
+ * @note the size of boolean_array is greater than or equal to
+ * get_height(tree)
  *
  * @param tree Pointer to the root of the WackyTree.
- * @param character The specific ASCII character to compute the encoding for.
+ * @param character The specific ASCII character to compute the encoding
+ * for.
  * @param boolean_array An array to store the traversal steps.
- * @param array_size Pointer to the variable holding the total number of steps.
- * If the character is not found, -1 is written to array_size instead.
+ * @param array_size Pointer to the variable holding the total number of
+ * steps. If the character is not found, -1 is written to array_size
+ * instead.
  */
 void get_wacky_code(WackyTreeNode *tree, char character, bool boolean_array[],
                     int *array_size) {
@@ -265,18 +353,18 @@ void get_wacky_code(WackyTreeNode *tree, char character, bool boolean_array[],
 }
 
 /**
- * Given the root of a WackyTree, a boolean array, and the size of the array,
- * this function traverses the tree. FALSE indicates a movement to the left,
- * and TRUE indicates a movement to the right. The function returns the
- * character at the node reached after all the steps have been taken. If the
- * node is not a leaf node (LEFT and RIGHT are NOT NULL), it returns the
- * DELIMITER ('\0') instead.
+ * Given the root of a WackyTree, a boolean array, and the size of the
+ * array, this function traverses the tree. FALSE indicates a movement
+ * to the left, and TRUE indicates a movement to the right. The function
+ * returns the character at the node reached after all the steps have
+ * been taken. If the node is not a leaf node (LEFT and RIGHT are NOT
+ * NULL), it returns the DELIMITER ('\0') instead.
  *
  * @param tree Pointer to the root of the WackyTree.
  * @param boolean_array An array representing the traversal steps.
  * @param array_size The size of the boolean array.
- * @return The character at the reached node or the DELIMITER ('\0') if the node
- * is not a leaf node.
+ * @return The character at the reached node or the DELIMITER ('\0') if
+ * the node is not a leaf node.
  */
 char get_character(WackyTreeNode *tree, bool boolean_array[], int array_size) {
     // TODO: Complete this function.
@@ -284,8 +372,8 @@ char get_character(WackyTreeNode *tree, bool boolean_array[], int array_size) {
 }
 
 /**
- * Given a binary tree, this function frees the memory associated with the
- * entire tree.
+ * Given a binary tree, this function frees the memory associated with
+ * the entire tree.
  *
  * @param tree Pointer to the root of the binary tree to be freed.
  */

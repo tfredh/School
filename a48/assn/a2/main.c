@@ -283,6 +283,7 @@ int main() {
      */
 
     WackyLinkedNode *linked_list = create_wacky_list(occurrence_array);
+    // printf("length = %d\n", getLength(linked_list));
 
     { // The first element should be '?' with weight '~0.00032'.
         WackyTreeNode *tree_node = linked_list->val;
@@ -311,23 +312,40 @@ int main() {
         }
     }
 
+    // { // check sorted
+    //     WackyLinkedNode *current = linked_list;
+    //     while (current != NULL) {
+    //         printf("current->val->val = '%c', current->val->weight = %f\n",
+    //                current->val->val, current->val->weight);
+
+    //         current = current->next;
+    //     }
+    //     double sum = 0;
+    //     WackyLinkedNode *curr = linked_list;
+    //     while (curr != NULL) {
+    //         sum += curr->val->weight;
+    //         curr = curr->next;
+    //     }
+    //     printf("sum = %f\n", sum);
+    // }
+
     /**
      * Testing merge_wacky_list ...
      */
+    WackyTreeNode *binary_tree = merge_wacky_list(linked_list);
 
-    // WackyTreeNode* binary_tree = merge_wacky_list(linked_list);
-
-    // // Perform a reverse in-order traversal of the binary_tree to print the
-    // // layout of the tree.
+    // // Perform a reverse in-order traversal of the binary_tree to print
+    // // the layout of the tree.
     // print_wacky_tree(binary_tree);
     // printf("\n");
 
-    // // The entire binary tree should weight 1.00 (100%).
-    // assert_tree_node(binary_tree, '\0', 1.00);
+    // The entire binary tree should weight 1.00 (100%).
+    assert_tree_node(binary_tree, '\0', 1.00);
 
-    // // Some additional tests to help validate your binary tree's structure.
-    // assert_tree_node(binary_tree->left->left, ' ', 0.19109);
-    // assert_tree_node(binary_tree->right->left->right->right, 'a', 0.07296);
+    // // Some additional tests to help validate your binary tree's
+    // structure.
+    assert_tree_node(binary_tree->left->left, ' ', 0.19109);
+    assert_tree_node(binary_tree->right->left->right->right, 'a', 0.07296);
 
     // /**
     //  * Testing get_height ...
@@ -350,8 +368,8 @@ int main() {
     //     // This translates to [TRUE, FALSE, TRUE, TRUE] of size 4.
     //     get_wacky_code(binary_tree, 'a', boolean_array, &array_size);
     //     if (array_size != 4) {
-    //         printf("Expected array_size = 4. Got %d instead.\n", array_size);
-    //         exit(1);
+    //         printf("Expected array_size = 4. Got %d instead.\n",
+    //         array_size); exit(1);
     //     }
 
     //     if (!boolean_array[0] || boolean_array[1] || !boolean_array[2] ||
@@ -379,15 +397,14 @@ int main() {
     // }
 
     // {
-    //     // Similarily, feeding [TRUE, FALSE, TRUE, TRUE] should return 'a'.
-    //     boolean_array[0] = true;
-    //     boolean_array[1] = false;
+    //     // Similarily, feeding [TRUE, FALSE, TRUE, TRUE] should return
+    //     'a'. boolean_array[0] = true; boolean_array[1] = false;
     //     boolean_array[2] = true;
     //     boolean_array[3] = true;
     //     char character = get_character(binary_tree, boolean_array, 4);
     //     if (character != 'a') {
-    //         printf("Expected character 'a'. Got %c instead.\n", character);
-    //         exit(1);
+    //         printf("Expected character 'a'. Got %c instead.\n",
+    //         character); exit(1);
     //     }
     // }
 
