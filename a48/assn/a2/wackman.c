@@ -121,9 +121,8 @@ WackyLinkedNode *convert_array_to_list(WackyLinkedNode *array[], int size) {
 WackyLinkedNode *sort_linked_list(WackyLinkedNode *nodeArray[], int size,
                                   int (*compare_function)(const void *,
                                                           const void *)) {
-    if (size == 0) {
+    if (size == 0)
         return NULL;
-    }
 
     qsort(nodeArray, size, sizeof(nodeArray[0]), compare_function);
     WackyLinkedNode *new_head = convert_array_to_list(nodeArray, size);
@@ -163,8 +162,6 @@ create_wacky_list(int occurrence_array[ASCII_CHARACTER_SET_SIZE]) {
 
         double weight = (double)occurrence_array[i] / (double)totalWeight;
         char c = i;
-        // printf("occ %d, tot %d, weight %f c %c\n", occurences, totalWeight,
-        //        weight, c);
 
         WackyTreeNode *newTreeNode = new_leaf_node(weight, c);
         WackyLinkedNode *newListNode = new_linked_node(newTreeNode);
@@ -173,29 +170,8 @@ create_wacky_list(int occurrence_array[ASCII_CHARACTER_SET_SIZE]) {
         linkedNodes[added++] = newListNode;
     }
 
-    // // first ! 0.003790
-    // printf("first %c %f\n", linkedNodes[1]->val->val,
-    //        linkedNodes[1]->val->weight);
-    // // first , 0.014529
-    // printf("first %c %f\n", linkedNodes[2]->val->val,
-    //        linkedNodes[2]->val->weight);
-    // printf("\n");
-
     // sort list nodes
     sort_linked_list(linkedNodes, occurences, compare_wacky_nodes);
-    // int i = 0;
-    // while (linkedNodes[i]->val->weight == 0.000315855969677826890000000000) {
-    //     printf("first %c %.30f\n", linkedNodes[i]->val->val,
-    //            linkedNodes[i]->val->weight);
-    //     i += 1;
-    // }
-    // printf("first %c %.30f\n", linkedNodes[i]->val->val,
-    //        linkedNodes[i]->val->weight);
-    // printf("last %c %f\n", linkedNodes[occurences - 2]->val->val,
-    //        linkedNodes[occurences - 2]->val->weight);
-    // printf("last %c %f\n", linkedNodes[occurences - 1]->val->val,
-    //        linkedNodes[occurences - 1]->val->weight);
-    // printf("\n");
 
     return convert_array_to_list(linkedNodes, occurences);
 }
@@ -279,14 +255,6 @@ WackyTreeNode *merge_wacky_list(WackyLinkedNode *linked_list) {
             dummy->next = curr;
             WackyLinkedNode *prev = dummy;
 
-            // current->val->val = 'D', current->val->weight = 0.000316;
-            // current->val->val = 'L', current->val->weight = 0.000316;
-            // current->val->val = 'q', current->val->weight = 0.000316;
-            // current->val->val = 'x', current->val->weight = 0.000316;
-            // current->val->val = 'S', current->val->weight = 0.000632;
-            // current->val->val = 'A', current->val->weight = 0.000948;
-            // current->val->val = 'E', current->val->weight = 0.000948;
-
             int added = 0;
             while (curr != NULL) {
                 if (newConnected->val->weight <= curr->val->weight) {
@@ -324,9 +292,18 @@ WackyTreeNode *merge_wacky_list(WackyLinkedNode *linked_list) {
  * @param tree Pointer to the root of the tree.
  * @return The height of the tree.
  */
+int myMax(int a, int b) {
+    if (a > b) {
+        return a;
+    } else {
+        return b;
+    }
+}
 int get_height(WackyTreeNode *tree) {
-    // TODO: Complete this function.
-    return -1;
+    if (tree == NULL)
+        return 0;
+
+    return 1 + myMax(get_height(tree->left), get_height(tree->right));
 }
 
 /**
@@ -348,23 +325,23 @@ int get_height(WackyTreeNode *tree) {
  * instead.
  */
 void get_wacky_code(WackyTreeNode *tree, char character, bool boolean_array[],
-                    int *array_size) {
-    // TODO: Complete this function.
-}
+                    int *array_size) {}
 
 /**
- * Given the root of a WackyTree, a boolean array, and the size of the
- * array, this function traverses the tree. FALSE indicates a movement
- * to the left, and TRUE indicates a movement to the right. The function
- * returns the character at the node reached after all the steps have
- * been taken. If the node is not a leaf node (LEFT and RIGHT are NOT
- * NULL), it returns the DELIMITER ('\0') instead.
+ * Given the root of a WackyTree, a boolean array, and the size
+ * of the array, this function traverses the tree. FALSE
+ * indicates a movement to the left, and TRUE indicates a
+ * movement to the right. The function returns the character at
+ * the node reached after all the steps have been taken. If the
+ * node is not a leaf node (LEFT and RIGHT are NOT NULL), it
+ * returns the DELIMITER ('\0') instead.
  *
  * @param tree Pointer to the root of the WackyTree.
- * @param boolean_array An array representing the traversal steps.
+ * @param boolean_array An array representing the traversal
+ * steps.
  * @param array_size The size of the boolean array.
- * @return The character at the reached node or the DELIMITER ('\0') if
- * the node is not a leaf node.
+ * @return The character at the reached node or the DELIMITER
+ * ('\0') if the node is not a leaf node.
  */
 char get_character(WackyTreeNode *tree, bool boolean_array[], int array_size) {
     // TODO: Complete this function.
@@ -372,10 +349,11 @@ char get_character(WackyTreeNode *tree, bool boolean_array[], int array_size) {
 }
 
 /**
- * Given a binary tree, this function frees the memory associated with
- * the entire tree.
+ * Given a binary tree, this function frees the memory
+ * associated with the entire tree.
  *
- * @param tree Pointer to the root of the binary tree to be freed.
+ * @param tree Pointer to the root of the binary tree to be
+ * freed.
  */
 void free_tree(WackyTreeNode *tree) {
     // TODO: Complete this function.
