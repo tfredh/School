@@ -355,9 +355,67 @@ int get_height(WackyTreeNode *tree) {
  * steps. If the character is not found, -1 is written to array_size
  * instead.
  */
+bool findCharPath(WackyTreeNode *tree, char character, bool temp_bool_arr[],
+                  int *array_size) {
+    /**
+     * Returns true if character found. False if not. While traversing through
+     * to find the character, update the path with boolean values. False for
+     * left, true for right.
+     */
+
+    if (tree == NULL)
+        return false;
+
+    if (tree->val != '\0') {
+        printf("the path size %d for '%c': ", *array_size, tree->val);
+        for (int i = 0; i < *array_size; i++) {
+            printf("%d ", temp_bool_arr[i]);
+        }
+        printf("\n");
+    }
+    // at leaf node
+    if (tree->left == NULL && tree->right == NULL) {
+        if (tree->val == character)
+            return true;
+        else
+            return false;
+    }
+
+    temp_bool_arr[*array_size] = false;
+    *array_size += 1;
+    bool found = findCharPath(tree->left, character, temp_bool_arr, array_size);
+    if (found)
+        return true;
+    *array_size -= 1; // reverse move
+
+    // replace the left search with right
+    temp_bool_arr[*array_size] = true;
+    *array_size += 1;
+    found = findCharPath(tree->right, character, temp_bool_arr, array_size);
+    if (found)
+        return true;
+    *array_size -= 1;
+
+    return false;
+}
 void get_wacky_code(WackyTreeNode *tree, char character, bool boolean_array[],
                     int *array_size) {
-    //
+    if (tree == NULL)
+        return;
+
+    bool tempBoolArr[128];
+    *array_size = 0; // set starting point
+    bool found = findCharPath(tree, character, tempBoolArr, array_size);
+    if (!found) {
+        *array_size = -1;
+        return;
+    }
+
+    // copy the tree exactly to the path (temp array may have a trashed path
+    // at the tail)
+    for (int i = 0; i < *array_size; i++) {
+        boolean_array[i] = tempBoolArr[i];
+    }
 }
 
 /**
