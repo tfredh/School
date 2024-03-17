@@ -246,18 +246,19 @@ WackyTreeNode *merge_wacky_list(WackyLinkedNode *linked_list) {
         free(newRight);
         WackyLinkedNode *newConnected = new_linked_node(newTreeNode);
 
-        WackyLinkedNode *curr = linked_list;
-        if (curr == NULL) {
+        // add the new node into it's place in the main list
+        // NULL check is necessary as linked_list was popped and pushed forward
+        // 2 times to create the new tree node
+        if (linked_list == NULL) {
             return newConnected->val;
 
             // if new node should come first
-        } else if (curr->val->weight > newConnected->val->weight) {
-            } else if (newConnected->val->weight <= curr->val->weight) {
-            newConnected->next = curr;
+        } else if (newConnected->val->weight <= linked_list->val->weight) {
+            newConnected->next = linked_list;
             linked_list = newConnected;
         } else {
-            WackyLinkedNode *prev = curr;
-            curr = prev->next;
+            WackyLinkedNode *prev = linked_list;
+            WackyLinkedNode *curr = prev->next;
             int added = 0;
 
             while (curr != NULL) {
@@ -280,9 +281,6 @@ WackyTreeNode *merge_wacky_list(WackyLinkedNode *linked_list) {
             }
         }
 
-        // add the new node into it's place in the main list
-        // NULL check is necessary as linked_list was popped and pushed forward
-        // 2 times to create the new tree node
         // WackyLinkedNode *curr = linked_list;
         // if (curr == NULL)
         //     return newConnected->val;
@@ -290,24 +288,20 @@ WackyTreeNode *merge_wacky_list(WackyLinkedNode *linked_list) {
         //     WackyLinkedNode *dummy = new_linked_node(NULL);
         //     dummy->next = curr;
         //     WackyLinkedNode *prev = dummy;
-
         //     int added = 0;
         //     while (curr != NULL) {
         //         if (newConnected->val->weight <= curr->val->weight) {
         //             prev->next = newConnected;
         //             newConnected->next = curr;
-
         //             WackyLinkedNode *resHead = dummy->next;
         //             free(dummy);
         //             linked_list = resHead;
         //             added = 1;
         //             break;
         //         }
-
         //         curr = curr->next;
         //         prev = prev->next;
         //     }
-
         //     // if newConnected should be inserted at the back
         //     if (!added) {
         //         prev->next = newConnected;
