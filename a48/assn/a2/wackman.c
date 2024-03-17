@@ -246,38 +246,75 @@ WackyTreeNode *merge_wacky_list(WackyLinkedNode *linked_list) {
         free(newRight);
         WackyLinkedNode *newConnected = new_linked_node(newTreeNode);
 
-        // add the new node into it's place in the main list
         WackyLinkedNode *curr = linked_list;
-        if (curr == NULL)
+        if (curr == NULL) {
             return newConnected->val;
-        else {
-            WackyLinkedNode *dummy = new_linked_node(NULL);
-            dummy->next = curr;
-            WackyLinkedNode *prev = dummy;
 
+            // if new node should come first
+        } else if (curr->val->weight > newConnected->val->weight) {
+            } else if (newConnected->val->weight <= curr->val->weight) {
+            newConnected->next = curr;
+            linked_list = newConnected;
+        } else {
+            WackyLinkedNode *prev = curr;
+            curr = prev->next;
             int added = 0;
+
             while (curr != NULL) {
                 if (newConnected->val->weight <= curr->val->weight) {
                     prev->next = newConnected;
                     newConnected->next = curr;
-
-                    WackyLinkedNode *resHead = dummy->next;
-                    free(dummy);
-                    linked_list = resHead;
                     added = 1;
                     break;
                 }
 
-                curr = curr->next;
                 prev = prev->next;
+                curr = curr->next;
             }
 
-            // if newConnected should be inserted at the back
+            // should be inserted at the back
             if (!added) {
                 prev->next = newConnected;
-                newConnected->next = NULL; // just making sure
+                newConnected->next =
+                    NULL; // default value anyways but just making sure
             }
         }
+
+        // add the new node into it's place in the main list
+        // NULL check is necessary as linked_list was popped and pushed forward
+        // 2 times to create the new tree node
+        // WackyLinkedNode *curr = linked_list;
+        // if (curr == NULL)
+        //     return newConnected->val;
+        // else {
+        //     WackyLinkedNode *dummy = new_linked_node(NULL);
+        //     dummy->next = curr;
+        //     WackyLinkedNode *prev = dummy;
+
+        //     int added = 0;
+        //     while (curr != NULL) {
+        //         if (newConnected->val->weight <= curr->val->weight) {
+        //             prev->next = newConnected;
+        //             newConnected->next = curr;
+
+        //             WackyLinkedNode *resHead = dummy->next;
+        //             free(dummy);
+        //             linked_list = resHead;
+        //             added = 1;
+        //             break;
+        //         }
+
+        //         curr = curr->next;
+        //         prev = prev->next;
+        //     }
+
+        //     // if newConnected should be inserted at the back
+        //     if (!added) {
+        //         prev->next = newConnected;
+        //         newConnected->next =
+        //             NULL; // default value anyways but just making sure
+        //     }
+        // }
     }
 
     return linked_list->val;
@@ -325,7 +362,9 @@ int get_height(WackyTreeNode *tree) {
  * instead.
  */
 void get_wacky_code(WackyTreeNode *tree, char character, bool boolean_array[],
-                    int *array_size) {}
+                    int *array_size) {
+    //
+}
 
 /**
  * Given the root of a WackyTree, a boolean array, and the size

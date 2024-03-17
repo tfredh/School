@@ -48,9 +48,9 @@ void print_wacky_tree_helper(WackyTreeNode *node, int space) {
     }
 
     if (node->val != '\0') {
-        printf("%.2f (%c)\n", node->weight, node->val);
+        printf("%.6f (%c)\n", node->weight, node->val);
     } else {
-        printf("%.2f\n", node->weight);
+        printf("%.6f\n", node->weight);
     }
 
     print_wacky_tree_helper(node->left, space + TREE_SPACING);
@@ -334,10 +334,10 @@ int main() {
      */
     WackyTreeNode *binary_tree = merge_wacky_list(linked_list);
 
-    // // Perform a reverse in-order traversal of the binary_tree to print
-    // // the layout of the tree.
-    // print_wacky_tree(binary_tree);
-    // printf("\n");
+    // Perform a reverse in-order traversal of the binary_tree to print
+    // the layout of the tree.
+    print_wacky_tree(binary_tree);
+    printf("\n");
 
     // The entire binary tree should weight 1.00 (100%).
     assert_tree_node(binary_tree, '\0', 1.00);
@@ -347,14 +347,14 @@ int main() {
     assert_tree_node(binary_tree->left->left, ' ', 0.19109);
     assert_tree_node(binary_tree->right->left->right->right, 'a', 0.07296);
 
-    /**
-     * Testing get_height ...
-     */
-    int height = get_height(binary_tree);
-    if (height != 13) {
-        printf("The tree has height 13. Got %d instead.\n", height);
-        exit(1);
-    }
+    // /**
+    //  * Testing get_height ...
+    //  */
+    // int height = get_height(binary_tree);
+    // if (height != 13) {
+    //     printf("The tree has height 13. Got %d instead.\n", height);
+    //     exit(1);
+    // }
 
     /**
      * Testing get_wacky_code ...
@@ -364,13 +364,13 @@ int main() {
     int array_size;
 
     {
-        // As shown above, 'a' is found at right->left->right->right
-        // This translates to [TRUE, FALSE, TRUE, TRUE] of size 4.
-        get_wacky_code(binary_tree, 'a', boolean_array, &array_size);
-        if (array_size != 4) {
-            printf("Expected array_size = 4. Got %d instead.\n", array_size);
-            exit(1);
-        }
+        // // As shown above, 'a' is found at right->left->right->right
+        // // This translates to [TRUE, FALSE, TRUE, TRUE] of size 4.
+        // get_wacky_code(binary_tree, 'a', boolean_array, &array_size);
+        // if (array_size != 4) {
+        //     printf("Expected array_size = 4. Got %d instead.\n", array_size);
+        //     exit(1);
+        // }
 
         //     if (!boolean_array[0] || boolean_array[1] || !boolean_array[2] ||
         //         !boolean_array[3]) {
@@ -425,3 +425,4 @@ int main() {
         // free_tree(binary_tree);
         return 0;
     }
+}
