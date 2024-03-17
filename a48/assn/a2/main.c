@@ -367,62 +367,72 @@ int main() {
         // As shown above, 'a' is found at right->left->right->right
         // This translates to [TRUE, FALSE, TRUE, TRUE] of size 4.
         get_wacky_code(binary_tree, 'a', boolean_array, &array_size);
+        // printf("array_size = %d\n", array_size);
 
         if (array_size != 4) {
             printf("Expected array_size = 4. Got %d instead.\n", array_size);
             exit(1);
         }
 
-        // if (!boolean_array[0] || boolean_array[1] || !boolean_array[2] ||
-        //     !boolean_array[3]) {
-        //     printf("Expected true false true true. Got ");
-        //     for (int i = 0; i < array_size; i++) {
-        //         if (boolean_array[i]) {
-        //             printf("true ");
-        //         } else {
-        //             printf("false ");
-        //         }
-        //     }
-        //     printf("instead.\n");
-        //     exit(1);
-        // }
+        if (!boolean_array[0] || boolean_array[1] || !boolean_array[2] ||
+            !boolean_array[3]) {
+            printf("Expected true false true true. Got ");
+            for (int i = 0; i < array_size; i++) {
+                if (boolean_array[i]) {
+                    printf("true ");
+                } else {
+                    printf("false ");
+                }
+            }
+            printf("instead.\n");
+            exit(1);
+        }
+
+        // MINES
+        get_wacky_code(binary_tree, '+', boolean_array, &array_size);
+        if (array_size != -1) {
+            printf("Expected array_size = -1. Got %d instead.\n", array_size);
+            exit(1);
+        }
+    }
+    // nvm there's one here
+    {
+        // Characters that cannot be found should return -1 instead.
+        get_wacky_code(binary_tree, '#', boolean_array, &array_size);
+        if (array_size != -1) {
+            printf("Expected array_size = -1. Got %d instead.\n", array_size);
+            exit(1);
+        }
     }
 
-    // {
-    //     // Characters that cannot be found should return -1 instead.
-    //     get_wacky_code(binary_tree, '#', boolean_array, &array_size);
-    //     if (array_size != -1) {
-    //         printf("Expected array_size = -1. Got %d instead.\n",
-    //         array_size); exit(1);
-    //     }
-    // }
+    {
+        // Similarily, feeding [TRUE, FALSE, TRUE, TRUE] should return 'a'.
+        boolean_array[0] = true;
+        boolean_array[1] = false;
+        boolean_array[2] = true;
+        boolean_array[3] = true;
+        char character = get_character(binary_tree, boolean_array, 4);
+        if (character != 'a') {
+            printf("Expected character 'a'. Got %c instead.\n", character);
+            exit(1);
+        }
+    }
 
-    // {
-    //     // Similarily, feeding [TRUE, FALSE, TRUE, TRUE] should return
-    //     'a'. boolean_array[0] = true; boolean_array[1] = false;
-    //     boolean_array[2] = true;
-    //     boolean_array[3] = true;
-    //     char character = get_character(binary_tree, boolean_array, 4);
-    //     if (character != 'a') {
-    //         printf("Expected character 'a'. Got %c instead.\n",
-    //         character); exit(1);
-    //     }
-    // }
+    // The message below can only be decompiled on a 32-bit runnable.
+    if (sizeof(int) != 4 || CHAR_BIT != 8 || sizeof(int *) != 4) {
+        printf(
+            "You must compile the main() program in 32-bit to continue...\n");
+        exit(1);
+    }
 
-    // // The message below can only be decompiled on a 32-bit runnable.
-    // if (sizeof(int) != 4 || CHAR_BIT != 8 || sizeof(int*) != 4) {
-    //     printf("You must compile the main() program in 32-bit to continue
-    //     ...\n"); exit(1);
-    // }
+    // If everything works properly, you should now be able to decode the
+    // following message!
+    int encoded[8] = {45,          -79266821,  1814895092, 1834766313,
+                      -2003211311, -229391379, -478575313, 235};
+    char *string = decode_ints(binary_tree, encoded);
+    printf("decode string = %s\n", string);
 
-    // // If everything works properly, you should now be able to decode the
-    // // following message!
-    // int encoded[8] = {45,          -79266821,  1814895092, 1834766313,
-    //                   -2003211311, -229391379, -478575313, 235};
-    // char* string = decode_ints(binary_tree, encoded);
-    // printf("decode string = %s\n", string);
-
-    // free(string);
-    // free_tree(binary_tree);
+    free(string);
+    free_tree(binary_tree);
     return 0;
 }
