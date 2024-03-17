@@ -334,7 +334,7 @@ int get_height(WackyTreeNode *tree) {
     if (tree == NULL)
         return 0;
 
-    return 1 + myMax(get_height(tree->left), get_height(tree->right));
+    return 1 + MAX(get_height(tree->left), get_height(tree->right));
 }
 
 /**

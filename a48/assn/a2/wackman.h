@@ -54,20 +54,3 @@ WackyLinkedNode *new_linked_node(WackyTreeNode *val) {
     node->next = NULL;
     return node;
 }
-
-void trav(WackyTreeNode *root) {
-    if (root == NULL)
-        return;
-
-    printf("%c %d", root->val, root->weight);
-    trav(root->left);
-    trav(root->right);
-}
-int getLength(WackyLinkedNode *head) {
-    int length = 0;
-    while (head != NULL) {
-        length++;
-        head = head->next;
-    }
-    return length;
-}
