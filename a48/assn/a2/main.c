@@ -434,5 +434,8 @@ int main() {
 
     free(string);
     free_tree(binary_tree);
+
+    // print_wacky_tree(binary_tree);
+    // printf("\n");
     return 0;
 }

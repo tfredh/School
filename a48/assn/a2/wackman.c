@@ -437,15 +437,23 @@ char get_character(WackyTreeNode *tree, bool boolean_array[], int array_size) {
     if (tree == NULL)
         return '\0';
 
+    WackyTreeNode *curr = tree;
     for (int i = 0; i < array_size; i++) {
+        if (curr == NULL)
+            return '\0';
+
         if (boolean_array[i] == false) {
-            tree = tree->left;
+            curr = curr->left;
         } else {
-            tree = tree->right;
+            curr = curr->right;
         }
     }
 
-    return tree->val;
+    // if not a leaf node
+    if (curr->left != NULL || curr->right != NULL) {
+        return '\0';
+    }
+    return curr->val;
 }
 
 /**
