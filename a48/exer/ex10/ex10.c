@@ -44,10 +44,10 @@
  * Output is initially empty (all pixels have colour 0).
  */
 typedef struct ListNode {
-    unsigned char coordinates[2];
+    int coordinates[2];
     struct ListNode *next;
 } ListNode;
-ListNode *newVisitedNode(unsigned char px, unsigned char py) {
+ListNode *newVisitedNode(int px, int py) {
     ListNode *newNode = malloc(sizeof(ListNode));
     newNode->coordinates[0] = px;
     newNode->coordinates[1] = py;
@@ -55,7 +55,7 @@ ListNode *newVisitedNode(unsigned char px, unsigned char py) {
 
     return newNode;
 }
-int hasBeenVisited(ListNode *visited, unsigned char px, unsigned char py) {
+int hasBeenVisited(ListNode *visited, int px, int py) {
     /**
      * Returns boolean.
      */
@@ -82,7 +82,7 @@ int hasBeenVisited(ListNode *visited, unsigned char px, unsigned char py) {
 
     return 0;
 }
-void addToVisited(ListNode *visited, unsigned char px, unsigned char py) {
+void addToVisited(ListNode *visited, int px, int py) {
     ListNode *newNode = newVisitedNode(px, py);
 
     ListNode *curr = visited;
@@ -100,14 +100,11 @@ void addToVisited(ListNode *visited, unsigned char px, unsigned char py) {
     // newNode->next = visited;
     // return newNode;
 }
-void dfsFill(unsigned char inputGrid[SIZEY][SIZEX], unsigned char px,
-             unsigned char py, unsigned char outputGrid[SIZEY][SIZEX],
-             ListNode *visited, unsigned char elevation) {
+void dfsFill(unsigned char inputGrid[SIZEY][SIZEX], int px, int py,
+             unsigned char outputGrid[SIZEY][SIZEX], ListNode *visited,
+             int elevation) {
     if ((px < 0 || px >= SIZEX) || (py < 0 || py >= SIZEY) ||
-        (inputGrid[py][px] != elevation)) {
-        return;
-    }
-    if (hasBeenVisited(visited, px, py)) {
+        hasBeenVisited(visited, px, py) || (inputGrid[py][px] != elevation)) {
         return;
     }
     // printf("bruh (%d, %d)\n", px, py);
@@ -271,7 +268,6 @@ int main() {
                 }
             }
         }
-        printf("all zero: %d\n\n\n", allzero);
     }
 
     // Write the connected region to the output image
@@ -282,21 +278,22 @@ int main() {
     //                     Output file will be output-2.pgm
     // --------------------------------------------------------------------------
 
-    // Read the selected input image into input[][]
-    readPGM("floo-region-2.pgm", &input[0][0]);
+    // // Read the selected input image into input[][]
+    // readPGM("floo-region-2.pgm", &input[0][0]);
 
-    // Don't forget to reset the output array!
-    for (int y = 0; y < SIZEY; y++) {
-        for (int x = 0; x < SIZEX; x++) {
-            output[y][x] = 0;
-        }
-    }
+    // // Don't forget to reset the output array!
+    // for (int y = 0; y < SIZEY; y++) {
+    //     for (int x = 0; x < SIZEX; x++) {
+    //         output[y][x] = 0;
+    //     }
+    // }
 
-    printf("Calling find_connected_region() on image 2...\n");
-    find_connected_region(input, 4, 35, output); // Staring position is (4, 35)
+    // printf("Calling find_connected_region() on image 2...\n");
+    // find_connected_region(input, 4, 35, output); // Staring position is (4,
+    // 35)
 
-    // Write the connected region to the output image
-    writePGM("output-2.pgm", &output[0][0]);
+    // // Write the connected region to the output image
+    // writePGM("output-2.pgm", &output[0][0]);
 
     printf("Done!\n");
     return 0;
