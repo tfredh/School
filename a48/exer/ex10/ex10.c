@@ -47,23 +47,25 @@ typedef struct ListNode {
     int coordinates[2];
     struct ListNode *next;
 } ListNode;
-ListNode *newVisited(int px, int py) {
+ListNode *newVisitedNode(int px, int py) {
     ListNode *newNode = malloc(sizeof(ListNode));
-
     newNode->coordinates[0] = px;
     newNode->coordinates[1] = py;
     newNode->next = NULL;
+
+    return newNode;
 }
 int hasBeenVisited(ListNode *visited, int px, int py) {
     /**
      * Returns boolean.
      */
+
     if (visited == NULL)
         return 0;
 
     ListNode *curr = visited;
     while (curr != NULL) {
-        if (curr->coordinates[0] == px, curr->coordinates[1] == py)
+        if (curr->coordinates[0] == px && curr->coordinates[1] == py)
             return 1;
 
         curr = curr->next;
@@ -72,15 +74,19 @@ int hasBeenVisited(ListNode *visited, int px, int py) {
     return 0;
 }
 ListNode *addToVisited(ListNode *visited, int px, int py) {
-    ListNode *newNode = newVisited(px, py);
-    if (visited == NULL) {
-        return newNode;
-    } else if (hasBeenVisited(visited, px, py)) {
-        return visited;
-    }
+    ListNode *newNode = newVisitedNode(px, py);
 
+    // add to head
     newNode->next = visited;
     return newNode;
+
+    // if (visited == NULL) {
+    //     return newNode;
+    // } else if (hasBeenVisited(visited, px, py)) {
+    //     return visited;
+    // }
+    // newNode->next = visited;
+    // return newNode;
 
     // ListNode *curr = visited;
     // while (curr->next) { // curr is not NULL at this point
@@ -97,11 +103,12 @@ ListNode *addToVisited(ListNode *visited, int px, int py) {
 }
 void dfsFill(unsigned char inputGrid[SIZEY][SIZEX], int px, int py,
              unsigned char outputGrid[SIZEY][SIZEX], ListNode *visited,
-             int elevation) {
+             unsigned char elevation) {
     if (hasBeenVisited(visited, px, py) || (px < 0 || px >= SIZEX) ||
-        (py < 0 || py >= SIZEY) || inputGrid[py][px] != elevation) {
+        (py < 0 || py >= SIZEY) || (inputGrid[py][px] != elevation)) {
         return;
     }
+    printf("bruh (%d, %d)\n", px, py);
 
     // otherwise, fill in this in the output
     outputGrid[py][px] = elevation;
@@ -116,10 +123,12 @@ void dfsFill(unsigned char inputGrid[SIZEY][SIZEX], int px, int py,
 void find_connected_region(unsigned char input[SIZEY][SIZEX], int px, int py,
                            unsigned char output[SIZEY][SIZEX]) {
     /**
-     * Your task is to find all *connected* pixels that have the same elevation
+     * Your task is to find all *connected* pixels that have the same
+     elevation
      * as the one at (px,py) in `input`, and mark these pixels on `output`.
      *
-     * For instance, if the initial coordinates are (px=5, py=10), your program
+     * For instance, if the initial coordinates are (px=5, py=10), your
+     program
      * must check the elevation at input[10][5], then set the colour of all
      * connected pixels to white (255) in the levelset_map.
      *
@@ -134,7 +143,8 @@ void find_connected_region(unsigned char input[SIZEY][SIZEX], int px, int py,
      *                       4    4    4    4    2    2
      *
      *
-     * If we call the function with the `input` above, and initial coordinates
+     * If we call the function with the `input` above, and initial
+     coordinates
      * (1,1), it should produce
      *
      * output:
@@ -146,7 +156,8 @@ void find_connected_region(unsigned char input[SIZEY][SIZEX], int px, int py,
      *                      255  255   0    0    0    0
      *                       0    0    0    0    0    0
      *
-     * If we call the function with initial coordinates (4, 0) it will produce
+     * If we call the function with initial coordinates (4, 0) it will
+     produce
      *
      * output:
      *
@@ -160,9 +171,11 @@ void find_connected_region(unsigned char input[SIZEY][SIZEX], int px, int py,
      * In effect, this function extracts the connected region in the image
      * array with the same elevation as that of the pixel at (px, py).
      *
-     * NOTE: A pixel can be 'connected' to it's it's 4 neighbours above, below,
+     * NOTE: A pixel can be 'connected' to it's it's 4 neighbours above,
+     below,
      *       to the left and right of it, if they have the same colour. In
-     *       particular, we will NOT count pixels along the diagonal. Carefully
+     *       particular, we will NOT count pixels along the diagonal.
+     Carefully
      *       look at the examples above to make sure you understand this.
      *
      * - You should NOT change the contents of the input array.
@@ -172,8 +185,16 @@ void find_connected_region(unsigned char input[SIZEY][SIZEX], int px, int py,
      * needed, and solve the problem!
      */
 
-    ListNode *visited = newVisited(-1, -1);
+    ListNode *visited = NULL;
     dfsFill(input, px, py, output, visited, input[py][px]);
+
+    // free the visited list
+    ListNode *curr = visited;
+    while (curr != NULL) {
+        ListNode *temp = curr;
+        curr = curr->next;
+        free(temp);
+    }
 }
 
 // ===========================================================================
@@ -203,51 +224,51 @@ int main() {
     // Read the selected input image into input[][]
     readPGM("floo-region-1.pgm", &input[0][0]);
 
-    { // print
-        for (int y = 0; y < SIZEY; y++) {
-            printf("R#%d:\n", y);
-            for (int x = 0; x < SIZEX; x++) {
-                printf("%d\t", input[y][x]);
-            }
-            printf("\n");
-            printf("\n");
-        }
-        int allzero = 0;
-        for (int y = 0; y < SIZEY; y++) {
-            for (int x = 0; x < SIZEX; x++) {
-                if (input[y][x] != 0) {
-                    allzero = 1;
-                    break;
-                }
-            }
-        }
-        printf("looking for %d\n", input[16][24]);
-        printf("all zero: %d\n\n\n", allzero);
-    }
+    // { // print
+    //     for (int y = 0; y < SIZEY; y++) {
+    //         printf("R#%d:\n", y);
+    //         for (int x = 0; x < SIZEX; x++) {
+    //             printf("%d\t", input[y][x]);
+    //         }
+    //         printf("\n");
+    //         printf("\n");
+    //     }
+    //     int allzero = 0;
+    //     for (int y = 0; y < SIZEY; y++) {
+    //         for (int x = 0; x < SIZEX; x++) {
+    //             if (input[y][x] != 0) {
+    //                 allzero = 1;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     printf("looking for %d\n", input[16][24]);
+    //     printf("all zero: %d\n\n\n", allzero);
+    // }
 
     printf("Calling find_connected_region() on image 1...\n");
     find_connected_region(input, 24, 16,
                           output); // Staring position is (24, 16)
 
-    { // print
-        for (int y = 0; y < SIZEY; y++) {
-            printf("R#%d:\n", y);
-            for (int x = 0; x < SIZEX; x++) {
-                printf("%d\t", output[y][x]);
-            }
-            printf("\n");
-            printf("\n");
-        }
-        int allzero = 0;
-        for (int y = 0; y < SIZEY; y++) {
-            for (int x = 0; x < SIZEX; x++) {
-                if (output[y][x] != 0) {
-                    allzero = 1;
-                    break;
-                }
-            }
-        }
-    }
+    // { // print
+    //     for (int y = 0; y < SIZEY; y++) {
+    //         printf("R#%d:\n", y);
+    //         for (int x = 0; x < SIZEX; x++) {
+    //             printf("%d\t", output[y][x]);
+    //         }
+    //         printf("\n");
+    //         printf("\n");
+    //     }
+    //     int allzero = 0;
+    //     for (int y = 0; y < SIZEY; y++) {
+    //         for (int x = 0; x < SIZEX; x++) {
+    //             if (output[y][x] != 0) {
+    //                 allzero = 1;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
 
     // Write the connected region to the output image
     writePGM("output-1.pgm", &output[0][0]);
