@@ -43,83 +43,22 @@
  * @param output The output image array to store the marked connected region.
  * Output is initially empty (all pixels have colour 0).
  */
-typedef struct VisitedNode {
-    int coordinates[2];
-    struct VisitedNode *next;
-} VisitedNode;
-VisitedNode *newVisitedNode(int px, int py) {
-    VisitedNode *newNode = malloc(sizeof(VisitedNode));
-    newNode->coordinates[0] = px;
-    newNode->coordinates[1] = py;
-    newNode->next = NULL;
-
-    return newNode;
-}
-int hasBeenVisited(VisitedNode *visited, int px, int py) {
-    /**
-     * Returns boolean.
-     */
-
-    {
-        // printf("full visited list: ");
-        // VisitedNode *curr = visited;
-        // while (curr != NULL) {
-        //     printf("(%d, %d) ", curr->coordinates[0], curr->coordinates[1]);
-        //     curr = curr->next;
-        // }
-        // printf("\n");
-    }
-    if (visited == NULL)
-        return 0;
-
-    VisitedNode *curr = visited;
-    while (curr != NULL) {
-        if (curr->coordinates[0] == px && curr->coordinates[1] == py)
-            return 1;
-
-        curr = curr->next;
-    }
-
-    return 0;
-}
-void addToVisited(VisitedNode *visited, int px, int py) {
-    VisitedNode *newNode = newVisitedNode(px, py);
-
-    VisitedNode *curr = visited;
-    while (curr->next != NULL) {
-        curr = curr->next;
-    }
-    curr->next = newNode;
-
-    // VisitedNode *newNode = newVisitedNode(px, py
-    // if (visited == NULL) {
-    //     return newNode;
-    // } else if (hasBeenVisited(visited, px, py)) {
-    //     return visited;
-    // }
-    // newNode->next = visited;
-    // return newNode;
-}
-void dfsFill(unsigned char inputGrid[SIZEY][SIZEX], int px, int py,
-             unsigned char outputGrid[SIZEY][SIZEX], VisitedNode *visited,
-             int elevation) {
+void dfsFill(unsigned char input[SIZEY][SIZEX], unsigned char px,
+             unsigned char py, unsigned char output[SIZEY][SIZEX],
+             unsigned char elevation) {
     if ((px < 0 || px >= SIZEX) || (py < 0 || py >= SIZEY) ||
-        hasBeenVisited(visited, px, py) || (inputGrid[py][px] != elevation)) {
+        (input[py][px] != elevation) || (output[py][px] == 255)) {
         return;
     }
-    // printf("bruh (%d, %d)\n", px, py);
 
-    // otherwise, fill in this in the output
-    outputGrid[py][px] = 255;
-    addToVisited(visited, px, py);
-
-    // continue searching in each direction
-    dfsFill(inputGrid, px - 1, py, outputGrid, visited, elevation);
-    dfsFill(inputGrid, px + 1, py, outputGrid, visited, elevation);
-    dfsFill(inputGrid, px, py - 1, outputGrid, visited, elevation);
-    dfsFill(inputGrid, px, py + 1, outputGrid, visited, elevation);
+    output[py][px] = 255;
+    dfsFill(input, px - 1, py, output, elevation);
+    dfsFill(input, px + 1, py, output, elevation);
+    dfsFill(input, px, py - 1, output, elevation);
+    dfsFill(input, px, py + 1, output, elevation);
 }
-void find_connected_region(unsigned char input[SIZEY][SIZEX], int px, int py,
+void find_connected_region(unsigned char input[SIZEY][SIZEX], unsigned char px,
+                           unsigned char py,
                            unsigned char output[SIZEY][SIZEX]) {
     /**
      * Your task is to find all *connected* pixels that have the same
@@ -184,19 +123,9 @@ void find_connected_region(unsigned char input[SIZEY][SIZEX], int px, int py,
      * needed, and solve the problem!
      */
 
-    VisitedNode *visited = newVisitedNode(-1, -1);
-    printf("looking for %d\n", input[16][24]);
-    dfsFill(input, px, py, output, visited, input[py][px]);
-
-    // free the visited list
-    VisitedNode *curr = visited;
-    while (curr != NULL) {
-        VisitedNode *temp = curr;
-        curr = curr->next;
-        free(temp);
-    }
+    const unsigned char targetElevation = input[py][px];
+    dfsFill(input, px, py, output, targetElevation);
 }
-
 // ===========================================================================
 // DO NOT CHANGE ANY 'ifndef' AND 'endif' MACROS.
 // These macros help ensure your parts of your code does not conflict with the
@@ -305,21 +234,22 @@ int main() {
     //
     // --------------------------------------------------------------------------
 
-    // // Read the selected input image into input[][]
-    // readPGM("floo-region-2.pgm", &input[0][0]);
+    // Read the selected input image into input[][]
+    readPGM("floo-region-2.pgm", &input[0][0]);
 
-    // // Don't forget to reset the output array!
-    // for (int y = 0; y < SIZEY; y++) {
-    //     for (int x = 0; x < SIZEX; x++) {
-    //         output[y][x] = 0;
-    //     }
-    // }
+    // Don't forget to reset the output array!
+    for (int y = 0; y < SIZEY; y++) {
+        for (int x = 0; x < SIZEX; x++) {
+            output[y][x] = 0;
+        }
+    }
 
-    // printf("Calling find_connected_region() on image 2...\n");
-    find_connected_region(input, 4, 35, output); // Staring position is (4, 35)
+    printf("Calling find_connected_region() on image 2...\n");
+    find_connected_region(input, 4, 35,
+                          output); // Staring position is (4, 35)
 
-    // // Write the connected region to the output image
-    // writePGM("output-2.pgm", &output[0][0]);
+    // Write the connected region to the output image
+    writePGM("output-2.pgm", &output[0][0]);
 
     printf("Done!\n");
     return 0;

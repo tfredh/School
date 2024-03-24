@@ -305,21 +305,21 @@ int main() {
     //
     // --------------------------------------------------------------------------
 
-    // // Read the selected input image into input[][]
-    // readPGM("floo-region-2.pgm", &input[0][0]);
+    // Read the selected input image into input[][]
+    readPGM("floo-region-2.pgm", &input[0][0]);
 
-    // // Don't forget to reset the output array!
-    // for (int y = 0; y < SIZEY; y++) {
-    //     for (int x = 0; x < SIZEX; x++) {
-    //         output[y][x] = 0;
-    //     }
-    // }
+    // Don't forget to reset the output array!
+    for (int y = 0; y < SIZEY; y++) {
+        for (int x = 0; x < SIZEX; x++) {
+            output[y][x] = 0;
+        }
+    }
 
-    // printf("Calling find_connected_region() on image 2...\n");
+    printf("Calling find_connected_region() on image 2...\n");
     find_connected_region(input, 4, 35, output); // Staring position is (4, 35)
 
-    // // Write the connected region to the output image
-    // writePGM("output-2.pgm", &output[0][0]);
+    // Write the connected region to the output image
+    writePGM("output-2.pgm", &output[0][0]);
 
     printf("Done!\n");
     return 0;
