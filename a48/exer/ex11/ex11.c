@@ -59,52 +59,96 @@ void print_sudoku(int sudoku[9][9]) {
  * @param sudoku The 9x9 Sudoku grid to be checked.
  * @return 1 if the Sudoku is valid, 0 if it's not.
  */
-int compare(const void *aPtr, const void *bPtr) {
-    int a = *(int *)aPtr;
-    int b = *(int *)bPtr;
+int existsAlready(int arr[9], int val) {
+    // Checks if a value already exists in the given array.
 
-    return a - b;
-}
-int checkSetCorrectness(int compartment[9]) {
-    // Checks if a compartment of 9 numbers are all unique.
-
-    int copy[9];
-    for (int row = 0; row < 9; row++) {
-        copy[row] = compartment[row];
+    for (int i = 0; i < 9; i++) {
+        if (arr[i] == val) {
+            return 1;
+        }
     }
 
-    qsort(copy, 9, sizeof(int), compare);
-
-    for (int row = 0; row < 9; row++) {
-        if (copy[0] != row + 1)
-            return 0;
-    }
-
-    return 1;
+    return 0;
 }
+void clearArray(int arr[9]) {
+    for (int i = 0; i < 9; i++) {
+        arr[i] = 0;
+    }
+}
+// int is_valid_sudoku(int sudoku[9][9]) {
+//     int tempCompartment[9];
+
+//     // rows
+//     for (int row = 0; row < 9; row++) {
+//         clearArray(tempCompartment);
+//         for (int col = 0; col < 9; col++) {
+//             int posVal = sudoku[row][col];
+//             if (posVal != 0 && existsAlready(tempCompartment, posVal)) {
+//                 return 0;
+//             }
+//             tempCompartment[col] = posVal;
+//         }
+//     }
+
+//     // columns
+//     for (int col = 0; col < 9; col++) {
+//         clearArray(tempCompartment);
+//         for (int row = 0; row < 9; row++) {
+//             int posVal = sudoku[row][col];
+//             if (posVal != 0 && existsAlready(tempCompartment, posVal)) {
+//                 return 0;
+//             }
+//             tempCompartment[row] = posVal;
+//         }
+//     }
+
+//     // boxes
+//     for (int startRow = 0; startRow < 9; startRow += 3) {
+//         for (int startCol = 0; startCol < 9; startCol += 3) {
+//             clearArray(tempCompartment);
+//             int i = 0;
+//             for (int r = 0; r < 3; r++) {
+//                 for (int c = 0; c < 3; c++) {
+//                     int posVal = sudoku[startRow + r][startCol + c];
+//                     if (posVal != 0 && existsAlready(tempCompartment,
+//                     posVal)) {
+//                         return 0;
+//                     }
+//                     tempCompartment[i++] = posVal;
+//                 }
+//             }
+//         }
+//     }
+
+//     return 1;
+// }
 int is_valid_sudoku(int sudoku[9][9]) {
     int tempCompartment[9];
+    clearArray(tempCompartment);
 
     // rows
     for (int row = 0; row < 9; row++) {
         for (int col = 0; col < 9; col++) {
+            int posVal = sudoku[row][col];
+            if (posVal != 0 && existsAlready(tempCompartment, posVal)) {
+                return 0;
+            }
             tempCompartment[col] = sudoku[row][col];
         }
-
-        if (!checkSetCorrectness(tempCompartment)) {
-            return 0;
-        }
+        clearArray(tempCompartment);
     }
 
     // columns
     for (int col = 0; col < 9; col++) {
         for (int row = 0; row < 9; row++) {
-            tempCompartment[row] = sudoku[row][col];
-
-            if (!checkSetCorrectness(tempCompartment)) {
+            int posVal = sudoku[row][col];
+            if (posVal != 0 && existsAlready(tempCompartment, posVal)) {
                 return 0;
             }
+
+            tempCompartment[row] = sudoku[row][col];
         }
+        clearArray(tempCompartment);
     }
 
     // boxes
@@ -114,13 +158,14 @@ int is_valid_sudoku(int sudoku[9][9]) {
 
             for (int r = 0; r < 3; r++) {
                 for (int c = 0; c < 3; c++) {
+                    int posVal = sudoku[startRow + r][startCol + c];
+                    if (posVal != 0 && existsAlready(tempCompartment, posVal)) {
+                        return 0;
+                    }
                     tempCompartment[i++] = sudoku[startRow + r][startCol + c];
                 }
             }
-
-            if (!checkSetCorrectness(tempCompartment)) {
-                return 0;
-            }
+            clearArray(tempCompartment);
         }
     }
 
