@@ -60,8 +60,8 @@ void print_sudoku(int sudoku[9][9]) {
  * @return 1 if the Sudoku is valid, 0 if it's not.
  */
 int compare(const void *aPtr, const void *bPtr) {
-    int *a = *(int *)aPtr;
-    int *b = *(int *)bPtr;
+    int a = *(int *)aPtr;
+    int b = *(int *)bPtr;
 
     return a - b;
 }
@@ -73,7 +73,7 @@ int checkSetCorrectness(int compartment[9]) {
         copy[row] = compartment[row];
     }
 
-    qsort(compartment, 9, sizeof(int), compare);
+    qsort(copy, 9, sizeof(int), compare);
 
     for (int row = 0; row < 9; row++) {
         if (copy[0] != row + 1)
@@ -141,16 +141,38 @@ int is_valid_sudoku(int sudoku[9][9]) {
  * `sudoku` array remains unchanged in this case.
  */
 int buildSudokuSolution(int sudoku[9][9], int row, int col) {
-    if (row == 8 && col == 9) {
+    if (row == 8 && col == 9)
         return 1;
+    if (col == 9) {
+        row += 1;
+        col = 0;
+    }
+    if (sudoku[row][col] != 0) {
+        // printf("???");
+        return buildSudokuSolution(sudoku, row, col + 1);
     }
 
-    for (int newVal = 0; newVal < 9; newVal++) {
-        if (is_valid_sudoku)
+    for (int newVal = 1; newVal <= 9; newVal++) {
+        sudoku[row][col] = newVal;
+        if (is_valid_sudoku(sudoku)) {
+            // printf("Tf %d (%d, %d)\n", newVal, row, col);
+            if (buildSudokuSolution(sudoku, row, col + 1)) {
+                return 1;
+            };
+        }
+
+        // didn't work, reset
+        sudoku[row][col] = 0;
     }
+
+    return 0;
 }
 int solve_sudoku(int sudoku[9][9]) {
-    //
+    if (buildSudokuSolution(sudoku, 0, 0)) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 // ===========================================================================
