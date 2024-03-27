@@ -82,27 +82,45 @@ int checkSetCorrectness(int compartment[9]) {
 
     return 1;
 }
-int is_valid_sudoku(int sudoku[9][9], int newRow, int newCol, int newVal) {
+int is_valid_sudoku(int sudoku[9][9]) {
+    int tempCompartment[9];
+
     // rows
-    for (int col = 0; col < 9; col++) {
-        if (sudoku[newRow][col] == newVal) {
+    for (int row = 0; row < 9; row++) {
+        for (int col = 0; col < 9; col++) {
+            tempCompartment[col] = sudoku[row][col];
+        }
+
+        if (!checkSetCorrectness(tempCompartment)) {
             return 0;
         }
     }
 
     // columns
-    for (int row = 0; row < 9; row++) {
-        if (sudoku[row][newCol] == newVal) {
-            return 0;
+    for (int col = 0; col < 9; col++) {
+        for (int row = 0; row < 9; row++) {
+            tempCompartment[row] = sudoku[row][col];
+
+            if (!checkSetCorrectness(tempCompartment)) {
+                return 0;
+            }
         }
     }
 
-    // box
-    const int startRow = newRow % 3;
-    const int startCol = newCol % 3;
-    for (int row = 0; row < 3; row++) {
-        for (int col = 0; col < 3; col++) {
-            //
+    // boxes
+    for (int startRow = 0; startRow < 9; startRow += 3) {
+        for (int startCol = 0; startCol < 9; startCol += 3) {
+            int i = 0;
+
+            for (int r = 0; r < 3; r++) {
+                for (int c = 0; c < 3; c++) {
+                    tempCompartment[i++] = sudoku[startRow + r][startCol + c];
+                }
+            }
+
+            if (!checkSetCorrectness(tempCompartment)) {
+                return 0;
+            }
         }
     }
 
@@ -122,6 +140,15 @@ int is_valid_sudoku(int sudoku[9][9], int newRow, int newCol, int newVal) {
  * updated, 0 if it's not possible to solve the Sudoku, and the input
  * `sudoku` array remains unchanged in this case.
  */
+int buildSudokuSolution(int sudoku[9][9], int row, int col) {
+    if (row == 8 && col == 9) {
+        return 1;
+    }
+
+    for (int newVal = 0; newVal < 9; newVal++) {
+        if (is_valid_sudoku)
+    }
+}
 int solve_sudoku(int sudoku[9][9]) {
     //
 }
