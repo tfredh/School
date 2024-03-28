@@ -193,14 +193,12 @@ int buildSudokuSolution(int sudoku[9][9], int row, int col) {
         col = 0;
     }
     if (sudoku[row][col] != 0) {
-        // printf("???");
         return buildSudokuSolution(sudoku, row, col + 1);
     }
 
     for (int newVal = 1; newVal <= 9; newVal++) {
         sudoku[row][col] = newVal;
         if (is_valid_sudoku(sudoku)) {
-            // printf("Tf %d (%d, %d)\n", newVal, row, col);
             if (buildSudokuSolution(sudoku, row, col + 1)) {
                 return 1;
             };
