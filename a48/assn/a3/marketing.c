@@ -367,7 +367,7 @@ User *create_user(char *name) {
     newUser->brands = NULL;
     newUser->visited = false;
 
-    insert_into_friend_list(allUsers, newUser);
+    allUsers = insert_into_friend_list(allUsers, newUser);
 
     return newUser;
 }
@@ -383,8 +383,19 @@ User *create_user(char *name) {
  * -1 if the user does not exist.
  */
 int delete_user(User *user) {
-    // TODO: Complete this function.
-    return -1;
+    // remove friend from list of all friends
+    for (FriendNode *fNode = user->friends; fNode != NULL;
+         fNode = fNode->next) {
+
+        // search for the user to be deleted node from all friend's friends list
+        for (FriendNode *fofNode = fNode->user; fofNode->next->user == user;
+             fofNode = fofNode->next) {
+
+            fofNode->next = fofNode->next->next;
+        }
+    }
+
+    allUsers = delete_from_friend_list(allUsers, user);
 }
 
 /**
@@ -399,8 +410,14 @@ int delete_user(User *user) {
  * -1 if the pair were already friends.
  */
 int add_friend(User *user, User *friend) {
-    // TODO: Complete this function.
-    return -1;
+    if (in_friend_list(user->friends, friend) &&
+        in_friend_list(friend->friends, user)) {
+        return -1;
+    }
+
+    user->friends = insert_into_friend_list(user->friends, friend);
+    friend->friends = insert_into_friend_list(friend->friends, user);
+    return 0;
 }
 
 /**
