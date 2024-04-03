@@ -383,19 +383,22 @@ User *create_user(char *name) {
  * -1 if the user does not exist.
  */
 int delete_user(User *user) {
-    // remove friend from list of all friends
-    for (FriendNode *fNode = user->friends; fNode != NULL;
-         fNode = fNode->next) {
-
-        // search for the user to be deleted node from all friend's friends list
-        for (FriendNode *fofNode = fNode->user; fofNode->next->user == user;
-             fofNode = fofNode->next) {
-
-            fofNode->next = fofNode->next->next;
-        }
+    if (user == NULL || !in_friend_list(allUsers, user)) {
+        return -1;
     }
 
+    // remove friend from all friends
+    for (FriendNode *fNode = allUsers; fNode != NULL; fNode = fNode->next) {
+        if (fNode->user == user)
+            continue;
+
+        fNode->user->friends =
+            delete_from_friend_list(fNode->user->friends, user);
+    }
+
+    // remove from global list
     allUsers = delete_from_friend_list(allUsers, user);
+    return 0;
 }
 
 /**

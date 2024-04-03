@@ -49,18 +49,26 @@ int main() {
     printf("\nTest 2 - Angela adds Brian as a friend\n");
     add_friend(angela, brian);
 
-    // Expect to see Angela with her friend Brian & see Brian with his friend Angela
-    if (!in_friend_list(angela->friends, brian) || !in_friend_list(brian->friends, angela)) {
+    // Expect to see Angela with her friend Brian & see Brian with his friend
+    // Angela
+    if (!in_friend_list(angela->friends, brian) ||
+        !in_friend_list(brian->friends, angela)) {
         printf("Test 2 failed. Friend connection was not made.\n");
         exit(1);
     }
 
     printf("Test 2 passed.\n");
 
+    // // MINE: test deleting user
+    // {
+    //     delete_user(mustafa);
+    //     printf("\nDelete successful\n");
+    // }
+
     printf("\nTest 3 - Degree of connection between Angela and Brian is 1\n");
     int angela_and_brian = get_degrees_of_connection(angela, brian);
 
-    if (angela_and_brian != 1) {  // Expect 1
+    if (angela_and_brian != 1) { // Expect 1
         printf("Test 3 failed. Friend connection was not made.\n");
         exit(1);
     }
@@ -84,7 +92,8 @@ int main() {
     int zeroIdx = get_brand_index("brandZero");
     int twoIdx = get_brand_index("brandTwo");
 
-    if (brand_adjacency_matrix[zeroIdx][twoIdx] != 1 || brand_adjacency_matrix[twoIdx][zeroIdx] != 1) {
+    if (brand_adjacency_matrix[zeroIdx][twoIdx] != 1 ||
+        brand_adjacency_matrix[twoIdx][zeroIdx] != 1) {
         printf("Test 5 failed. Brand connection was not made.\n");
         exit(1);
     }
@@ -95,8 +104,9 @@ int main() {
     add_friend(angela, william);
     int mutuals_brian_will = get_mutual_friends(brian, william);
 
-    if (mutuals_brian_will != 1) {  // Expect 1
-        printf("Test 6 failed. Mutual friends of Brian and William should be 1.\n");
+    if (mutuals_brian_will != 1) { // Expect 1
+        printf("Test 6 failed. Mutual friends of Brian and William should be "
+               "1.\n");
         exit(1);
     }
 
@@ -105,7 +115,7 @@ int main() {
     printf("\nTest 7 - Brian is suggested 1 friend\n");
     User *brianSuggested = get_suggested_friend(brian);
 
-    if (brianSuggested != william) {  // We should see Will here again
+    if (brianSuggested != william) { // We should see Will here again
         printf("Test 7 failed. Brian was not suggested William.\n");
         exit(1);
     }
@@ -118,8 +128,10 @@ int main() {
     add_suggested_friends(mustafa, 2);
 
     // Expect to see Mustafa with friends Angela, Brian, and Will
-    if (!in_friend_list(mustafa->friends, brian) || !in_friend_list(mustafa->friends, william)) {
-        printf("Test 8 failed. Mustafa was not suggested 2 friends correctly.\n");
+    if (!in_friend_list(mustafa->friends, brian) ||
+        !in_friend_list(mustafa->friends, william)) {
+        printf(
+            "Test 8 failed. Mustafa was not suggested 2 friends correctly.\n");
         exit(1);
     }
 
@@ -130,9 +142,11 @@ int main() {
     follow_brand(mustafa, "brandZero");
     follow_suggested_brands(mustafa, 1);
 
-    // Mustafa should now also follow brandonRufino. A tie is broken against brandTwo.
+    // Mustafa should now also follow brandonRufino. A tie is broken against
+    // brandTwo.
     if (!in_brand_list(mustafa->brands, "brandonRufino")) {
-        printf("Test 9 failed. Mustafa did not follow brand 'brandonRufino'.\n");
+        printf(
+            "Test 9 failed. Mustafa did not follow brand 'brandonRufino'.\n");
         exit(1);
     }
 
