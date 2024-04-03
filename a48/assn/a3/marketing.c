@@ -23,7 +23,7 @@
 #define MAX_STR_LEN 1024
 
 #ifndef MAT_SIZE
-#define MAT_SIZE 3  // A small graph
+#define MAT_SIZE 3 // A small graph
 #endif
 
 typedef struct user_struct {
@@ -95,7 +95,8 @@ bool in_brand_list(BrandNode *head, char *name) {
  * @return Pointer to the head of the new linked list after insertion.
  */
 FriendNode *insert_into_friend_list(FriendNode *head, User *node) {
-    if (node == NULL) return head;
+    if (node == NULL)
+        return head;
 
     if (in_friend_list(head, node)) {
         printf("User already in list\n");
@@ -106,7 +107,8 @@ FriendNode *insert_into_friend_list(FriendNode *head, User *node) {
     fn->user = node;
     fn->next = NULL;
 
-    if (head == NULL) return fn;
+    if (head == NULL)
+        return fn;
 
     if (strcmp(head->user->name, node->name) > 0) {
         fn->next = head;
@@ -136,7 +138,8 @@ FriendNode *insert_into_friend_list(FriendNode *head, User *node) {
  * @return Pointer to the head of the new linked list after insertion.
  */
 BrandNode *insert_into_brand_list(BrandNode *head, char *node) {
-    if (node == NULL) return head;
+    if (node == NULL)
+        return head;
 
     if (in_brand_list(head, node)) {
         printf("Brand already in list\n");
@@ -147,7 +150,8 @@ BrandNode *insert_into_brand_list(BrandNode *head, char *node) {
     strcpy(fn->brand_name, node);
     fn->next = NULL;
 
-    if (head == NULL) return fn;
+    if (head == NULL)
+        return fn;
 
     if (strcmp(head->brand_name, node) > 0) {
         fn->next = head;
@@ -177,7 +181,8 @@ BrandNode *insert_into_brand_list(BrandNode *head, char *node) {
  * @return Pointer to the head of the new linked list after deletion.
  */
 FriendNode *delete_from_friend_list(FriendNode *head, User *node) {
-    if (node == NULL) return head;
+    if (node == NULL)
+        return head;
 
     if (!in_friend_list(head, node)) {
         printf("User not in list\n");
@@ -212,7 +217,8 @@ FriendNode *delete_from_friend_list(FriendNode *head, User *node) {
  * @return Pointer to the head of the new linked list after deletion.
  */
 BrandNode *delete_from_brand_list(BrandNode *head, char *node) {
-    if (node == NULL) return head;
+    if (node == NULL)
+        return head;
 
     if (!in_brand_list(head, node)) {
         printf("Brand not in list\n");
@@ -272,7 +278,7 @@ int get_brand_index(char *name) {
     }
 
     printf("Brand '%s' not found\n", name);
-    return -1;  // Not found
+    return -1; // Not found
 }
 
 /**
@@ -337,6 +343,7 @@ void populate_brand_matrix(char *file_name) {
     }
 }
 
+// BEGIN
 /**
  * Given a name, this function creates a new user on the platform. The user is
  * then inserted into the allUsers linked list. If a user already existed with
@@ -347,8 +354,22 @@ void populate_brand_matrix(char *file_name) {
  * the same name already exists.
  */
 User *create_user(char *name) {
-    // TODO: Complete this function.
-    return NULL;
+    if (name == NULL) {
+        return NULL;
+    }
+
+    User *newUser = malloc(sizeof(User));
+    if (newUser == NULL)
+        return NULL;
+
+    strcpy(newUser->name, name);
+    newUser->friends = NULL;
+    newUser->brands = NULL;
+    newUser->visited = false;
+
+    insert_into_friend_list(allUsers, newUser);
+
+    return newUser;
 }
 
 /**
