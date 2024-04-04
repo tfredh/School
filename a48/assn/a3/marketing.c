@@ -382,6 +382,23 @@ User *create_user(char *name) {
  * @return 0 if the user was successfully removed,
  * -1 if the user does not exist.
  */
+FriendNode *delete_from_friend_list_NoFree(FriendNode *head, User *node) {
+    if (node == NULL || !in_friend_list(head, node))
+        return head;
+
+    // covers edge case of node to delete being first, and also when there is
+    // only one node
+    if (strcmp(head->user->name, node->name) == 0) {
+        return head->next;
+    }
+
+    FriendNode *curr;
+    for (curr = head; curr->next->user != node; curr = curr->next)
+        ;
+    curr->next = curr->next->next;
+
+    return head;
+}
 int delete_user(User *user) {
     if (user == NULL || !in_friend_list(allUsers, user)) {
         return -1;
@@ -392,8 +409,9 @@ int delete_user(User *user) {
         if (fNode->user == user)
             continue;
 
+        // will only work for the first time since it gets freed
         fNode->user->friends =
-            delete_from_friend_list(fNode->user->friends, user);
+            delete_from_friend_list_NoFree(fNode->user->friends, user);
     }
 
     // remove from global list
@@ -413,7 +431,7 @@ int delete_user(User *user) {
  * -1 if the pair were already friends.
  */
 int add_friend(User *user, User *friend) {
-    if (in_friend_list(user->friends, friend) &&
+    if (in_friend_list(user->friends, friend) ||
         in_friend_list(friend->friends, user)) {
         return -1;
     }
@@ -434,8 +452,16 @@ int add_friend(User *user, User *friend) {
  * -1 if the pair were not friends.
  */
 int remove_friend(User *user, User *friend) {
-    // TODO: Complete this function.
-    return -1;
+    if (!in_friend_list(user->friends, friend) ||
+        !in_friend_list(friend->friends, user))
+        return -1;
+
+    // remove "user" from "friend" friend list
+    friend->friends = delete_from_friend_list_NoFree(friend->friends, user);
+    // remove "friend" from "user" friend list
+    user->friends = delete_from_friend_list_NoFree(user->friends, friend);
+
+    return 0;
 }
 
 /**

@@ -12,6 +12,7 @@
  * approval from course staff before uploading and sharing with others.
  */
 #include "marketing.c"
+#include <assert.h>
 
 /**
  * You may modify this file however you wish as it will not be submitted on
@@ -61,8 +62,34 @@ int main() {
 
     // // MINE: test deleting user
     // {
+    //     printf("Names: ");
+    //     for (FriendNode *f = allUsers; f != NULL; f = f->next) {
+    //         printf("%s\t", f->user->name);
+    //     }
     //     delete_user(mustafa);
+    //     printf("\nNames after delete: ");
+    //     for (FriendNode *f = allUsers; f != NULL; f = f->next) {
+    //         printf("%s\t", f->user->name);
+    //     }
     //     printf("\nDelete successful\n");
+    // }
+
+    // // MINE: TEST removing friendship
+    // {
+    //     printf("\n");
+    //     printf("angela friend 1: %s\n", angela->friends->user);
+    //     assert(strcmp(angela->friends->user->name, "Brian") == 0);
+    //     printf("brian friend 1: %s\n", brian->friends->user);
+    //     assert(strcmp(brian->friends->user->name, "Angela") == 0);
+
+    //     remove_friend(angela, brian);
+
+    //     printf("angela friend 1: %s\n", angela->friends); // should be (null)
+    //     assert(angela->friends == NULL);
+    //     printf("brian friend 1: %s\n", brian->friends); // should be (null)
+    //     assert(brian->friends == NULL);
+
+    //     printf("Removal friendhsip succ\n");
     // }
 
     printf("\nTest 3 - Degree of connection between Angela and Brian is 1\n");
