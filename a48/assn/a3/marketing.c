@@ -344,6 +344,25 @@ void populate_brand_matrix(char *file_name) {
 }
 
 // BEGIN
+// -----------------------------------------------------------------------------------------
+// BEGIN
+// -----------------------------------------------------------------------------------------
+// BEGIN
+// -----------------------------------------------------------------------------------------
+// BEGIN
+// -----------------------------------------------------------------------------------------
+// BEGIN
+// -----------------------------------------------------------------------------------------
+// BEGIN
+// -----------------------------------------------------------------------------------------
+// BEGIN
+// -----------------------------------------------------------------------------------------
+// BEGIN
+// -----------------------------------------------------------------------------------------
+// BEGIN
+// -----------------------------------------------------------------------------------------
+// BEGIN
+// -----------------------------------------------------------------------------------------
 /**
  * Given a name, this function creates a new user on the platform. The user is
  * then inserted into the allUsers linked list. If a user already existed with
@@ -359,16 +378,17 @@ User *create_user(char *name) {
     }
 
     User *newUser = malloc(sizeof(User));
-    if (newUser == NULL)
-        return NULL;
 
     strcpy(newUser->name, name);
     newUser->friends = NULL;
     newUser->brands = NULL;
     newUser->visited = false;
+    if (in_friend_list(allUsers, newUser)) {
+        free(newUser);
+        return NULL;
+    }
 
     allUsers = insert_into_friend_list(allUsers, newUser);
-
     return newUser;
 }
 
@@ -476,8 +496,16 @@ int remove_friend(User *user, User *friend) {
  * -1 if the link already existed or the brand name is invalid.
  */
 int follow_brand(User *user, char *brand_name) {
-    // TODO: Complete this function.
-    return -1;
+    if (user == NULL || brand_name == NULL) {
+        return -1;
+    }
+    if (in_brand_list(user->brands, brand_name)) {
+        printf("Brand already followed\n");
+        return -1;
+    }
+
+    user->brands = insert_into_brand_list(user->brands, brand_name);
+    return 0;
 }
 
 /**
@@ -491,9 +519,29 @@ int follow_brand(User *user, char *brand_name) {
  * @return 0 if the link was successfully removed, -1 if the link did not
  * previously exist or the brand name is invalid.
  */
+BrandNode *delete_from_brand_list_NoFree(BrandNode *head, char *node) {
+    if (head == NULL || node == NULL || !in_brand_list(head, node)) {
+        return head;
+    }
+
+    if (strcmp(head->brand_name, node) == 0) {
+        return head->next;
+    }
+
+    BrandNode *curr;
+    for (curr = head; strcmp(curr->next->brand_name, node) != 0;
+         curr = curr->next)
+        ;
+    curr->next = curr->next->next;
+    return head;
+}
 int unfollow_brand(User *user, char *brand_name) {
-    // TODO: Complete this function.
-    return -1;
+    if (user == NULL || brand_name == NULL ||
+        !in_brand_list(user->brands, brand_name))
+        return -1;
+
+    user->brands = delete_from_brand_list_NoFree(user->brands, brand_name);
+    return 0;
 }
 
 /**

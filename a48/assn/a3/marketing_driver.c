@@ -92,6 +92,34 @@ int main() {
     //     printf("Removal friendhsip succ\n");
     // }
 
+    {
+        // MINE: follow brand test
+        printf("\n");
+        printf("angela brand 1: %s\n", angela->brands);
+        assert(angela->brands == NULL);
+
+        printf("[following brands]\n");
+        follow_brand(angela, "brandZero");
+        follow_brand(angela, "brandzOne");
+        printf("angela brand 1: %s\n", angela->brands->brand_name);
+        assert(strcmp(angela->brands->brand_name, "brandZero") == 0);
+        printf("angela brand 2: %s\n", angela->brands->next);
+        assert(strcmp(angela->brands->next->brand_name, "brandzOne") == 0);
+
+        // MINE: test unfollow_brand
+        printf("[unfollowing brands]\n");
+        unfollow_brand(angela, "brandzOne");
+        printf("angela brand 1: %s\n", angela->brands->brand_name);
+        printf("angela brand 2: %s\n", angela->brands->next);
+        assert(strcmp(angela->brands->brand_name, "brandZero") == 0);
+        assert(angela->brands->next == NULL);
+
+        unfollow_brand(angela, "brandZero");
+        printf("Unfollowing all brands\n");
+        printf("angela brand 1: %s\n", angela->brands);
+        assert(angela->brands == NULL);
+    }
+
     printf("\nTest 3 - Degree of connection between Angela and Brian is 1\n");
     int angela_and_brian = get_degrees_of_connection(angela, brian);
 
