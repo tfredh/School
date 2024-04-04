@@ -520,6 +520,10 @@ int follow_brand(User *user, char *brand_name) {
  * previously exist or the brand name is invalid.
  */
 BrandNode *delete_from_brand_list_NoFree(BrandNode *head, char *node) {
+    // same as delete_from_brand_list() but without freeing the node.
+    // used when the node will be reused possibly in the future, but still needs
+    // to be removed from the brand list
+
     if (head == NULL || node == NULL || !in_brand_list(head, node)) {
         return head;
     }
@@ -554,8 +558,17 @@ int unfollow_brand(User *user, char *brand_name) {
  * @return The number of mutual friends between the two users.
  */
 int get_mutual_friends(User *a, User *b) {
-    // TODO: Complete this function.
-    return 0;
+    int mutualFriends = 0;
+
+    for (FriendNode *aFriend = a->friends; aFriend != NULL;
+         aFriend = aFriend->next) {
+
+        if (in_friend_list(b->friends, aFriend->user)) {
+            mutualFriends += 1;
+        }
+    }
+
+    return mutualFriends;
 }
 
 /**
