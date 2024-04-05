@@ -583,8 +583,75 @@ int get_mutual_friends(User *a, User *b) {
  * connection can be formed.
  */
 int get_degrees_of_connection(User *a, User *b) {
-    // TODO: Complete this function.
+    // search for 'b' in 'a->friends'
+    if (a == NULL) {
+        return -1;
+    }
+    if (a == b) {
+        return 0;
+    }
+
+    int minDegree = -999;
+    a->visited = true;
+
+    FriendNode *aFriend;
+    for (aFriend = a->friends; aFriend != NULL; aFriend = aFriend->next) {
+        if (aFriend->user->visited)
+            continue;
+
+        int degree = get_degrees_of_connection(aFriend->user, b);
+        if (degree != -1 || degree > minDegree) {
+            minDegree = degree;
+        }
+    }
+
+    aFriend->user->visited = false;
+
+    if (minDegree != -999) {
+        return 1 + minDegree;
+    }
     return -1;
+
+    // if (a == NULL || b == NULL) {
+    //     return -1;
+    // }
+
+    // if (a == b) {
+    //     return 0;
+    // }
+
+    // // reset visited flag
+    // for (FriendNode *f = allUsers; f != NULL; f = f->next) {
+    //     f->user->visited = false;
+    // }
+
+    // // BFS
+    // int degrees = 0;
+    // FriendNode *queue = NULL;
+    // queue = insert_into_friend_list(queue, a);
+    // a->visited = true;
+
+    // while (queue != NULL) {
+    //     FriendNode *nextQueue = NULL;
+    //     for (FriendNode *f = queue; f != NULL; f = f->next) {
+    //         if (f->user == b) {
+    //             return degrees;
+    //         }
+
+    //         for (FriendNode *f2 = f->user->friends; f2 != NULL; f2 =
+    //         f2->next) {
+    //             if (!f2->user->visited) {
+    //                 nextQueue = insert_into_friend_list(nextQueue, f2->user);
+    //                 f2->user->visited = true;
+    //             }
+    //         }
+    //     }
+
+    //     degrees += 1;
+    //     queue = nextQueue;
+    // }
+
+    // return -1;
 }
 
 /**
