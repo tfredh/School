@@ -609,9 +609,9 @@ int get_degrees_of_connection(User *a, User *b) {
         // check if any of the users in the queue storing this current layer of
         // search are the connection
         while (queue != NULL) {
-            // store the current node to free later since all nodes created for
-            // the queue are malloced
-            FriendNode *temp = queue;
+            FriendNode *temp =
+                queue; // store the current node to free later
+                       // since all nodes created for the queue are malloced
 
             User *user = queue->user;
             if (user == b) {
@@ -632,6 +632,7 @@ int get_degrees_of_connection(User *a, User *b) {
             free(temp);
         }
 
+        // reset the queue to the next level of friends
         queue = nextQueue;
         degree += 1;
     }
