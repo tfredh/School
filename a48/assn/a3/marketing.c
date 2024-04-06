@@ -598,37 +598,38 @@ int get_degrees_of_connection(User *a, User *b) {
     // reset visited flags
     resetVisitedFlags(allUsers);
 
-    int degree = 1;
-    FriendNode *queue = a->friends;
+    int degree = 0;
+    FriendNode *queue = insert_into_friend_list(NULL, a);
     a->visited = true; // clearly the starting point is visited
-    // also mark all friends of a as visited
-    for (FriendNode *fNode = queue; fNode != NULL; fNode = fNode->next) {
-        fNode->user->visited = true;
-    }
 
+    // outer queue loop infinitely until all paths are exhausted
     while (queue != NULL) {
         FriendNode *nextQueue = NULL;
 
-        // check if any of the users in the queue are the connection
-        for (FriendNode *user = queue; user != NULL; user = user->next) {
-            User *user = queue->user;
-            queue = queue->next;
+        // check if any of the users in the queue storing this current layer of
+        // search are the connection
+        while (queue != NULL) {
+            // store the current node to free later since all nodes created for
+            // the queue are malloced
+            FriendNode *temp = queue;
 
+            User *user = queue->user;
             if (user == b) {
                 return degree;
             }
 
             // add each friend of the next connection to the queue for
             // subsequent searches
-            for (FriendNode *fNode = user->friends; fNode != NULL;
-                 fNode = fNode->next) {
-                if (fNode->user->visited)
+            for (FriendNode *f2 = user->friends; f2 != NULL; f2 = f2->next) {
+                if (f2->user->visited)
                     continue;
 
-                fNode->user->visited = true;
-                nextQueue = insert_into_friend_list(nextQueue, fNode->user);
+                f2->user->visited = true;
+                nextQueue = insert_into_friend_list(nextQueue, f2->user);
             }
 
+            queue = queue->next;
+            free(temp);
         }
 
         queue = nextQueue;
@@ -637,7 +638,6 @@ int get_degrees_of_connection(User *a, User *b) {
 
     return -1;
 }
-
 
 /**
  * Given two brand names, this function marks the two brands as similar in the

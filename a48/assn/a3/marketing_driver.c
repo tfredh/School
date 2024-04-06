@@ -124,6 +124,7 @@ int main() {
     int angela_and_brian = get_degrees_of_connection(angela, brian);
 
     if (angela_and_brian != 1) { // Expect 1
+        printf("angela_and_brian: %d\n", angela_and_brian);
         printf("Test 3 failed. Friend connection was not made.\n");
         exit(1);
     }
@@ -170,7 +171,7 @@ int main() {
         printf("[MINE]: All connection degrees correct\n");
     }
 
-    // printf("Test 3 passed.\n");
+    printf("Test 3 passed.\n");
 
     // printf("\nTest 4 - Angela follows Brand 'brandonRufino'\n");
     // populate_brand_matrix("brands.txt");
