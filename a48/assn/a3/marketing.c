@@ -582,77 +582,62 @@ int get_mutual_friends(User *a, User *b) {
  * @return The degree of connection between the two users, or -1 if no
  * connection can be formed.
  */
+void resetVisitedFlags(FriendNode *head) {
+    for (FriendNode *fNode = allUsers; fNode != NULL; fNode = fNode->next) {
+        fNode->user->visited = false;
+    }
+}
 int get_degrees_of_connection(User *a, User *b) {
-    // search for 'b' in 'a->friends'
-    if (a == NULL) {
+    if (a == NULL || b == NULL) {
         return -1;
     }
     if (a == b) {
         return 0;
     }
 
-    int minDegree = -999;
-    a->visited = true;
+    // reset visited flags
+    resetVisitedFlags(allUsers);
 
-    FriendNode *aFriend;
-    for (aFriend = a->friends; aFriend != NULL; aFriend = aFriend->next) {
-        if (aFriend->user->visited)
-            continue;
+    int degree = 1;
+    FriendNode *queue = a->friends;
+    a->visited = true; // clearly the starting point is visited
+    // also mark all friends of a as visited
+    for (FriendNode *fNode = queue; fNode != NULL; fNode = fNode->next) {
+        fNode->user->visited = true;
+    }
 
-        int degree = get_degrees_of_connection(aFriend->user, b);
-        if (degree != -1 || degree > minDegree) {
-            minDegree = degree;
+    while (queue != NULL) {
+        FriendNode *nextQueue = NULL;
+
+        // check if any of the users in the queue are the connection
+        for (FriendNode *user = queue; user != NULL; user = user->next) {
+            User *user = queue->user;
+            queue = queue->next;
+
+            if (user == b) {
+                return degree;
+            }
+
+            // add each friend of the next connection to the queue for
+            // subsequent searches
+            for (FriendNode *fNode = user->friends; fNode != NULL;
+                 fNode = fNode->next) {
+                if (fNode->user->visited)
+                    continue;
+
+                fNode->user->visited = true;
+                nextQueue = insert_into_friend_list(nextQueue, fNode->user);
+            }
+
         }
+
+        queue = nextQueue;
+        degree += 1;
     }
 
-    aFriend->user->visited = false;
-
-    if (minDegree != -999) {
-        return 1 + minDegree;
-    }
     return -1;
-
-    // if (a == NULL || b == NULL) {
-    //     return -1;
-    // }
-
-    // if (a == b) {
-    //     return 0;
-    // }
-
-    // // reset visited flag
-    // for (FriendNode *f = allUsers; f != NULL; f = f->next) {
-    //     f->user->visited = false;
-    // }
-
-    // // BFS
-    // int degrees = 0;
-    // FriendNode *queue = NULL;
-    // queue = insert_into_friend_list(queue, a);
-    // a->visited = true;
-
-    // while (queue != NULL) {
-    //     FriendNode *nextQueue = NULL;
-    //     for (FriendNode *f = queue; f != NULL; f = f->next) {
-    //         if (f->user == b) {
-    //             return degrees;
-    //         }
-
-    //         for (FriendNode *f2 = f->user->friends; f2 != NULL; f2 =
-    //         f2->next) {
-    //             if (!f2->user->visited) {
-    //                 nextQueue = insert_into_friend_list(nextQueue, f2->user);
-    //                 f2->user->visited = true;
-    //             }
-    //         }
-    //     }
-
-    //     degrees += 1;
-    //     queue = nextQueue;
-    // }
-
-    // return -1;
 }
+
 
 /**
  * Given two brand names, this function marks the two brands as similar in the
