@@ -210,7 +210,9 @@ int main() {
     printf("Test 6 passed.\n");
 
     printf("\nTest 7 - Brian is suggested 1 friend\n");
+    printf("Brian brands: %s\n", brian->brands);
     User *brianSuggested = get_suggested_friend(brian);
+    printf("Brian suggested friend: %s\n", brianSuggested->name);
 
     if (brianSuggested != william) { // We should see Will here again
         printf("Test 7 failed. Brian was not suggested William.\n");
