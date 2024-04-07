@@ -762,8 +762,22 @@ User *get_suggested_friend(User *user) {
  * @return The number of friends successfully added.
  */
 int add_suggested_friends(User *user, int n) {
-    // TODO: Complete this function.
-    return 0;
+    if (user == NULL || n <= 0) {
+        return 0;
+    }
+
+    int addedUsers = 0;
+    for (int i = 0; i < n; i++) {
+        User *recommendedUser = get_suggested_friend(user);
+        if (recommendedUser == NULL) {
+            break;
+        }
+
+        add_friend(user, recommendedUser);
+        addedUsers += 1;
+    }
+
+    return addedUsers;
 }
 
 /**

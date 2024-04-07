@@ -221,21 +221,20 @@ int main() {
 
     printf("Test 7 passed.\n");
 
-    // printf("\nTest 8 - Mustafa adds 2 suggested friends\n");
+    printf("\nTest 8 - Mustafa adds 2 suggested friends\n");
 
-    // add_friend(angela, mustafa);
-    // add_suggested_friends(mustafa, 2);
+    add_friend(angela, mustafa);
+    add_suggested_friends(mustafa, 2);
 
-    // // Expect to see Mustafa with friends Angela, Brian, and Will
-    // if (!in_friend_list(mustafa->friends, brian) ||
-    //     !in_friend_list(mustafa->friends, william)) {
-    //     printf(
-    //         "Test 8 failed. Mustafa was not suggested 2 friends
-    //         correctly.\n");
-    //     exit(1);
-    // }
+    // Expect to see Mustafa with friends Angela, Brian, and Will
+    if (!in_friend_list(mustafa->friends, brian) ||
+        !in_friend_list(mustafa->friends, william)) {
+        printf(
+            "Test 8 failed. Mustafa was not suggested 2 friends correctly.\n");
+        exit(1);
+    }
 
-    // printf("Test 8 passed.\n");
+    printf("Test 8 passed.\n");
 
     // printf("\nTest 9 - Mustafa follows 1 suggested brand\n");
     // follow_brand(william, "brandTwo");
