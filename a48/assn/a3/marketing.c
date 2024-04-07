@@ -498,7 +498,7 @@ int remove_friend(User *user, User *friend) {
  * -1 if the link already existed or the brand name is invalid.
  */
 int follow_brand(User *user, char *brand_name) {
-    if (user == NULL || brand_name == NULL) {
+    if (user == NULL || brand_name == NULL || get_brand_index(brand_name) < 0) {
         return -1;
     }
     if (in_brand_list(user->brands, brand_name)) {
@@ -526,7 +526,8 @@ BrandNode *delete_from_brand_list_NoFree(BrandNode *head, char *node) {
     // used when the node will be reused possibly in the future, but still needs
     // to be removed from the brand list
 
-    if (head == NULL || node == NULL || !in_brand_list(head, node)) {
+    if (head == NULL || node == NULL || !in_brand_list(head, node) ||
+        get_brand_index(node) < 0) {
         return head;
     }
 
@@ -543,7 +544,8 @@ BrandNode *delete_from_brand_list_NoFree(BrandNode *head, char *node) {
 }
 int unfollow_brand(User *user, char *brand_name) {
     if (user == NULL || brand_name == NULL ||
-        !in_brand_list(user->brands, brand_name))
+        !in_brand_list(user->brands, brand_name) ||
+        get_brand_index(brand_name) < 0)
         return -1;
 
     user->brands = delete_from_brand_list_NoFree(user->brands, brand_name);
@@ -650,8 +652,10 @@ int get_degrees_of_connection(User *a, User *b) {
  * @param brandNameB Pointer to the second brand name.
  */
 void connect_similar_brands(char *brandNameA, char *brandNameB) {
-    if (brandNameA == NULL || brandNameB == NULL)
+    if (brandNameA == NULL || brandNameB == NULL ||
+        get_brand_index(brandNameA) < 0 || get_brand_index(brandNameB) < 0) {
         return;
+    }
 
     int brandAIdx = get_brand_index(brandNameA);
     int brandBIdx = get_brand_index(brandNameB);
@@ -664,9 +668,9 @@ void connect_similar_brands(char *brandNameA, char *brandNameB) {
 }
 
 /**
- * Given two brand names, this function marks the two brands as different (not
- * similar) in the brand_adjacency_matrix variable. If either brand name is
- * invalid, no action is taken.
+ * Given two brand names, this function marks the two brands as different
+ * (not similar) in the brand_adjacency_matrix variable. If either brand
+ * name is invalid, no action is taken.
  *
  * @param brandNameA Pointer to the first brand name.
  * @param brandNameB Pointer to the second brand name.
@@ -691,13 +695,14 @@ void remove_similar_brands(char *brandNameA, char *brandNameB) {
  * To find the best match, the new suggested friend should have the highest
  * number of mutually liked brands amongst all other valid candidates.
  *
- * If a tie needs to be broken, select the user with the name that comes first
- * in reverse-alphanumerical order.
+ * If a tie needs to be broken, select the user with the name that comes
+ * first in reverse-alphanumerical order.
  *
- * The suggested friend must be a valid user, cannot be the user themself, nor
- * cannot be someone that they're already friends with.
+ * The suggested friend must be a valid user, cannot be the user themself,
+ * nor cannot be someone that they're already friends with.
  *
- * If the user is already friends with everyone on the platform, returns NULL.
+ * If the user is already friends with everyone on the platform, returns
+ * NULL.
  *
  * At times, a similarity rating of 0 is the best option.
  *
@@ -737,7 +742,8 @@ User *get_suggested_friend(User *user) {
         //     mostMutuals = mutualBrands;
         //     userToRecommend = fNode->user;
         // }
-        // this above is enough, but in case the school test cases are weird:
+        // this above is enough, but in case the school test cases are
+        // weird:
         if (mutualBrands > mostMutuals) {
             mostMutuals = mutualBrands;
             userToRecommend = fNode->user;
@@ -752,12 +758,13 @@ User *get_suggested_friend(User *user) {
 }
 
 /**
- * Given a user and a positive integer n, this function adds n suggested friends
- * using the get_suggested_friend() function. There might not be enough users on
- * the platform to satisfy n completely, so it returns the amount of friends
- * successfully added.
+ * Given a user and a positive integer n, this function adds n suggested
+ * friends using the get_suggested_friend() function. There might not be
+ * enough users on the platform to satisfy n completely, so it returns the
+ * amount of friends successfully added.
  *
- * @param user Pointer to the user for whom suggested friends are being added.
+ * @param user Pointer to the user for whom suggested friends are being
+ * added.
  * @param n The number of suggested friends to add.
  * @return The number of friends successfully added.
  */
@@ -781,20 +788,20 @@ int add_suggested_friends(User *user, int n) {
 }
 
 /**
- * Given a user and a positive integer n, this function suggests and follows n
- * new brands for them.
+ * Given a user and a positive integer n, this function suggests and follows
+ * n new brands for them.
  *
- * To find the best matches, suggested brands have the most similarities with
- * the brands that the user already follows.
+ * To find the best matches, suggested brands have the most similarities
+ * with the brands that the user already follows.
  *
- * If a tie needs to be broken, the brands with the names that comes first in
- * reverse-alphanumerical order is selected.
+ * If a tie needs to be broken, the brands with the names that comes first
+ * in reverse-alphanumerical order is selected.
  *
- * The suggested brand must be a valid brand and cannot be a brand that the user
- * already follows.
+ * The suggested brand must be a valid brand and cannot be a brand that the
+ * user already follows.
  *
- * There might not be enough brands on the platform to satisfy n completely, so
- * the function returns the amount of brands successfully followed.
+ * There might not be enough brands on the platform to satisfy n completely,
+ * so the function returns the amount of brands successfully followed.
  *
  * At times, a similarity rating of 0 is the best option.
  *
@@ -802,7 +809,64 @@ int add_suggested_friends(User *user, int n) {
  * @param n The number of suggested brands to follow.
  * @return The number of brands successfully followed.
  */
+bool inArray(char *arr[], int size, char *str) {
+    for (int i = 0; i < size; i++) {
+        if (strcmp(arr[i], str) == 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
 int follow_suggested_brands(User *user, int n) {
-    // TODO: Complete this function.
-    return 0;
+    if (user == NULL || n <= 0) {
+        return 0;
+    }
+
+    char *brandsToAdd[MAT_SIZE];
+    int addedBrands = 0;
+
+    while (addedBrands != n) {
+        char *brandToBeAdded = NULL;
+        int mostSimilar = -1;
+
+        for (int i = 0; i < MAT_SIZE; i++) {
+            char *brand = brand_names[i];
+            if (in_brand_list(user->brands, brand) ||
+                inArray(brandsToAdd, addedBrands, brand)) {
+                continue;
+            }
+
+            int similar = 0;
+            for (BrandNode *bNode = user->brands; bNode != NULL;
+                 bNode = bNode->next) {
+                int brandIdx = get_brand_index(bNode->brand_name);
+
+                if (brand_adjacency_matrix[i][brandIdx] == 1) {
+                    similar += 1;
+                }
+            }
+
+            if (similar > mostSimilar) {
+                mostSimilar = similar;
+                brandToBeAdded = brand;
+            } else if (similar == mostSimilar) {
+                if (strcmp(brand, brandToBeAdded) > 0) {
+                    brandToBeAdded = brand;
+                }
+            }
+        }
+
+        if (brandToBeAdded == NULL) {
+            break;
+        }
+        brandsToAdd[addedBrands] = brandToBeAdded;
+        addedBrands += 1;
+    }
+
+    for (int i = 0; i < addedBrands; i++) {
+        follow_brand(user, brandsToAdd[i]);
+    }
+
+    return addedBrands;
 }

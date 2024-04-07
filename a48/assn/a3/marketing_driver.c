@@ -236,21 +236,35 @@ int main() {
 
     printf("Test 8 passed.\n");
 
-    // printf("\nTest 9 - Mustafa follows 1 suggested brand\n");
-    // follow_brand(william, "brandTwo");
-    // follow_brand(mustafa, "brandZero");
-    // follow_suggested_brands(mustafa, 1);
+    printf("\nTest 9 - Mustafa follows 1 suggested brand\n");
+    follow_brand(william, "brandTwo");
+    follow_brand(mustafa, "brandZero");
 
-    // // Mustafa should now also follow brandonRufino. A tie is broken against
-    // // brandTwo.
-    // if (!in_brand_list(mustafa->brands, "brandonRufino")) {
-    //     printf(
-    //         "Test 9 failed. Mustafa did not follow brand
-    //         'brandonRufino'.\n");
-    //     exit(1);
-    // }
+    printf("Mustafa brands: ");
+    for (BrandNode *b = mustafa->brands; b != NULL; b = b->next) {
+        printf("%s\t", b->brand_name);
+    }
+    printf("\n");
 
-    // printf("Test 9 passed.\n");
+    follow_suggested_brands(mustafa, 4);
+    follow_suggested_brands(william, 1);
 
-    // printf("\nAll basic test cases passed. :)\n");
+    printf("[Followed suggested brands]\n");
+    printf("Mustafa brands: ");
+    for (BrandNode *b = mustafa->brands; b != NULL; b = b->next) {
+        printf("%s\t", b->brand_name);
+    }
+    printf("\n");
+
+    // Mustafa should now also follow brandonRufino. A tie is broken against
+    // brandTwo.
+    if (!in_brand_list(mustafa->brands, "brandonRufino")) {
+        printf(
+            "Test 9 failed. Mustafa did not follow brand 'brandonRufino'.\n");
+        exit(1);
+    }
+
+    printf("Test 9 passed.\n");
+
+    printf("\nAll basic test cases passed. :)\n");
 }
