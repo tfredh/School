@@ -271,6 +271,9 @@ void print_user_data(User *user) {
  * if it doesn't exist.
  */
 int get_brand_index(char *name) {
+    if (name == NULL)
+        return -1;
+
     for (int i = 0; i < MAT_SIZE; i++) {
         if (strcmp(brand_names[i], name) == 0) {
             return i;
@@ -429,7 +432,6 @@ int delete_user(User *user) {
         if (fNode->user == user)
             continue;
 
-        // will only work for the first time since it gets freed
         fNode->user->friends =
             delete_from_friend_list_NoFree(fNode->user->friends, user);
     }
@@ -595,7 +597,6 @@ int get_degrees_of_connection(User *a, User *b) {
         return 0;
     }
 
-    // reset visited flags
     resetVisitedFlags(allUsers);
 
     int degree = 0;
@@ -649,8 +650,17 @@ int get_degrees_of_connection(User *a, User *b) {
  * @param brandNameB Pointer to the second brand name.
  */
 void connect_similar_brands(char *brandNameA, char *brandNameB) {
-    // TODO: Complete this function.
-    return;
+    if (brandNameA == NULL || brandNameB == NULL)
+        return;
+
+    int brandAIdx = get_brand_index(brandNameA);
+    int brandBIdx = get_brand_index(brandNameB);
+
+    if (brandAIdx < 0 || brandBIdx < 0)
+        return;
+
+    brand_adjacency_matrix[brandAIdx][brandBIdx] = 1;
+    brand_adjacency_matrix[brandBIdx][brandAIdx] = 1;
 }
 
 /**
@@ -662,8 +672,17 @@ void connect_similar_brands(char *brandNameA, char *brandNameB) {
  * @param brandNameB Pointer to the second brand name.
  */
 void remove_similar_brands(char *brandNameA, char *brandNameB) {
-    // TODO: Complete this function.
-    return;
+    if (brandNameA == NULL || brandNameB == NULL)
+        return;
+
+    int brandAIdx = get_brand_index(brandNameA);
+    int brandBIdx = get_brand_index(brandNameB);
+
+    if (brandAIdx < 0 || brandBIdx < 0)
+        return;
+
+    brand_adjacency_matrix[brandAIdx][brandBIdx] = 0;
+    brand_adjacency_matrix[brandBIdx][brandAIdx] = 0;
 }
 
 /**
