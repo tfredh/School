@@ -847,10 +847,12 @@ int follow_suggested_brands(User *user, int n) {
                 }
             }
 
+            // also covers first iteration case where brandToBeAdded = NULL
             if (similar > mostSimilar) {
                 mostSimilar = similar;
                 brandToBeAdded = brand;
             } else if (similar == mostSimilar) {
+                // safe as brandToBeAdded != NULL as per above condition
                 if (strcmp(brand, brandToBeAdded) > 0) {
                     brandToBeAdded = brand;
                 }
