@@ -93,6 +93,8 @@ int main() {
     // }
 
     // {
+    //     populate_brand_matrix("brands.txt");
+
     //     // MINE: follow brand test
     //     printf("\n");
     //     printf("angela brand 1: %s\n", angela->brands);
@@ -100,15 +102,15 @@ int main() {
 
     //     printf("[following brands]\n");
     //     follow_brand(angela, "brandZero");
-    //     follow_brand(angela, "brandzOne");
+    //     follow_brand(angela, "brandTwo");
     //     printf("angela brand 1: %s\n", angela->brands->brand_name);
-    //     assert(strcmp(angela->brands->brand_name, "brandZero") == 0);
+    //     assert(strcmp(angela->brands->brand_name, "brandTwo") == 0);
     //     printf("angela brand 2: %s\n", angela->brands->next);
-    //     assert(strcmp(angela->brands->next->brand_name, "brandzOne") == 0);
+    //     assert(strcmp(angela->brands->next->brand_name, "brandZero") == 0);
 
     //     // MINE: test unfollow_brand
     //     printf("[unfollowing brands]\n");
-    //     unfollow_brand(angela, "brandzOne");
+    //     unfollow_brand(angela, "brandTwo");
     //     printf("angela brand 1: %s\n", angela->brands->brand_name);
     //     printf("angela brand 2: %s\n", angela->brands->next);
     //     assert(strcmp(angela->brands->brand_name, "brandZero") == 0);
@@ -202,7 +204,7 @@ int main() {
     int mutuals_brian_will = get_mutual_friends(brian, william);
 
     if (mutuals_brian_will != 1) { // Expect 1
-        printf("Test 6 failed. Mutual friends of Brian and William should be "
+        printf("Test 6 failed. Mutual friends of Brian and William should be"
                "1.\n");
         exit(1);
     }
@@ -210,9 +212,11 @@ int main() {
     printf("Test 6 passed.\n");
 
     printf("\nTest 7 - Brian is suggested 1 friend\n");
-    printf("Brian brands: %s\n", brian->brands);
+    // printf("Brian brands: %s\n", brian->brands);
+    // assert(brian->brands == NULL);
     User *brianSuggested = get_suggested_friend(brian);
-    printf("Brian suggested friend: %s\n", brianSuggested->name);
+    // printf("Brian suggested friend: %s\n", brianSuggested->name);
+    // assert(strcmp(brianSuggested->name, "William") == 0);
 
     if (brianSuggested != william) { // We should see Will here again
         printf("Test 7 failed. Brian was not suggested William.\n");
@@ -240,21 +244,27 @@ int main() {
     follow_brand(william, "brandTwo");
     follow_brand(mustafa, "brandZero");
 
-    printf("Mustafa brands: ");
-    for (BrandNode *b = mustafa->brands; b != NULL; b = b->next) {
-        printf("%s\t", b->brand_name);
-    }
-    printf("\n");
+    // printf("Mustafa brands: ");
+    // for (BrandNode *b = mustafa->brands; b != NULL; b = b->next) {
+    //     printf("%s\t", b->brand_name);
+    // }
+    // printf("\n");
+    // assert(strcmp(mustafa->brands->brand_name, "brandZero") == 0);
+    // assert(mustafa->brands->next == NULL);
 
     follow_suggested_brands(mustafa, 4);
     follow_suggested_brands(william, 1);
 
-    printf("[Followed suggested brands]\n");
-    printf("Mustafa brands: ");
-    for (BrandNode *b = mustafa->brands; b != NULL; b = b->next) {
-        printf("%s\t", b->brand_name);
-    }
-    printf("\n");
+    // printf("[Followed suggested brands]\n");
+    // printf("Mustafa brands: ");
+    // for (BrandNode *b = mustafa->brands; b != NULL; b = b->next) {
+    //     printf("%s\t", b->brand_name);
+    // }
+    // printf("\n");
+    // assert(strcmp(mustafa->brands->brand_name, "brandTwo") == 0);
+    // assert(strcmp(mustafa->brands->next->brand_name, "brandZero") == 0);
+    // assert(strcmp(mustafa->brands->next->next->brand_name, "brandonRufino")
+    // == 0);
 
     // Mustafa should now also follow brandonRufino. A tie is broken against
     // brandTwo.
