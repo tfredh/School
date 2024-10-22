@@ -4,10 +4,16 @@ package lab3;
  * A class representing a rational number. A rational number is a number that can be expressed as the
  * quotient or fraction p/q of two integers, a numerator p and a non-zero denominator q. The class
  * implements the SpecialNumber interface and provides methods to add and divide rational numbers.
+ * 
+ * @see SpecialNumber
+ * @see SpecialNumber#add(SpecialNumber)
+ * @see SpecialNumber#divideByInt(int)
+ * @see SpecialNumber#computeAverage(java.util.List)
+ * @see Lab3Exception
  */
 public class RationalNumber extends SpecialNumber implements Comparable<RationalNumber> {
-    int numerator;
-    int denominator;
+    public int numerator; 
+    public int denominator; 
 
     /**
      * Constructs a RationalNumber object with the given numerator and denominator. If
@@ -33,6 +39,7 @@ public class RationalNumber extends SpecialNumber implements Comparable<Rational
      * @param otherNum the RationalNumber to add
      * @return the sum of the two RationalNumbers
      * @throws Lab3Exception if the other RationalNumber is null
+     * @see SpecialNumber#add(SpecialNumber)
      */
     @Override
     public SpecialNumber add(SpecialNumber otherNum) throws Lab3Exception {
@@ -128,7 +135,7 @@ public class RationalNumber extends SpecialNumber implements Comparable<Rational
      * @return the greatest common divisor of the two integers
      * @see #hashCode()
      */
-    private int gcd(int a, int b) {
+    public int gcd(int a, int b) {
         return b == 0 ? a : gcd(b, a % b);
     }
 }

@@ -1,6 +1,19 @@
 package lab3;
 import java.util.List;
 
+/**
+ * An abstract class representing a special number. A special number is a number that has special properties
+ * and can be added to other special numbers of the same type. The class provides methods to add a special
+ * number to another special number, divide a special number by an integer, and compute the average of a list
+ * of special numbers.
+ * 
+ * @see RationalNumber
+ * @see ComplexNumber
+ * @see Lab3Exception
+ * @see SpecialNumber#add(SpecialNumber)
+ * @see SpecialNumber#divideByInt(int)
+ * @see SpecialNumber#computeAverage(java.util.List)
+ */
 public abstract class SpecialNumber {
     /**
      * Adds a SpecialNumber to this SpecialNumber. The two SpecialNumbers must be of the same type.
