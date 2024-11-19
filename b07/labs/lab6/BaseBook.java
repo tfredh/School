@@ -31,7 +31,7 @@ public abstract class BaseBook implements Item {
             return false;
         if (!(obj instanceof Book))
             return false;
-        Book other = (Book) obj;
+        BaseBook other = (BaseBook) obj;
         if (isbn == null) {
             if (other.isbn != null)
                 return false;
