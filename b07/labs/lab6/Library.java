@@ -24,24 +24,24 @@ public class Library extends StorageManager<Book> {
 	 * the StorageManager class.
 	 */
 	public void addBook(Book book) {
-		items.add(book);
+		super.addItem(book);
 		books.add(book);
 	}
 
 	public void removeBook(Book book) {
-		items.remove(book);
+		super.removeItem(book);
 		books.remove(book);
 	}
 
 	public boolean bookExists(Book book) {
-		return items.contains(book) || books.contains(book);
+		return super.itemExists(book) && books.contains(book);
 	}
 
 	@Override
 	void deliver(Book book, Customer customer) {
 		if (bookExists(book)) {
-			books.remove(book);
 			super.deliver(book, customer);
+			books.remove(book);
 		}
 	}
 }
